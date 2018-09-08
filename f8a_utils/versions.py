@@ -8,6 +8,23 @@ from lxml import etree
 _logger = logging.getLogger(__name__)
 
 
+def get_versions_for_ep(ecosystem, package_name):
+    """Get all versions for given (ecosystem, package).
+
+    :param ecosystem: str, ecosystem name
+    :param package_name: str, package name
+    :return list, list of versions
+    """
+    if ecosystem == 'npm':
+        return get_versions_for_npm_package(package_name)
+    if ecosystem == 'pypi':
+        return get_versions_for_pypi_package(package_name)
+    if ecosystem == 'maven':
+        return get_versions_for_maven_package(package_name)
+    else:
+        raise ValueError('Unsupported ecosystem: {e}'.format(e=ecosystem))
+
+
 def get_versions_for_npm_package(package_name):
     """Get all versions for given NPM package.
 

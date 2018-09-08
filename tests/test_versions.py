@@ -1,11 +1,13 @@
 """Test the code to retrieve package version from online sources."""
 
 from unittest.mock import patch
+import pytest
 
 from f8a_utils.versions import (
     get_versions_for_npm_package,
     get_versions_for_pypi_package,
-    get_versions_for_maven_package
+    get_versions_for_maven_package,
+    get_versions_for_ep
 )
 
 
@@ -24,6 +26,10 @@ def test_get_versions_for_npm_package():
 
     # we expect empty list there
     assert not package_versions
+
+    package_versions = get_versions_for_ep("npm", "uuid")
+    assert package_versions is not None
+    assert "3.3.2" in package_versions
 
 
 def test_get_versions_for_npm_package_deprecated_package():
@@ -98,6 +104,10 @@ def test_get_python_versions():
     # we expect empty list there
     assert not package_versions
 
+    package_versions = get_versions_for_ep("pypi", "flask")
+    assert package_versions is not None
+    assert "1.0.2" in package_versions
+
 
 def test_get_java_versions():
     """Test basic behavior of function get_versions_for_maven_package."""
@@ -120,3 +130,13 @@ def test_get_java_versions():
 
     # we expect empty list there
     assert not package_versions
+
+    package_versions = get_versions_for_ep("maven", "junit:junit")
+    assert package_versions is not None
+    assert "4.12" in package_versions
+
+
+def test_get_versions_for_ep_bad_ecosystem():
+    """Test get_versions_for_ep for unsupported ecosystem."""
+    with pytest.raises(ValueError):
+        get_versions_for_ep("cobol", "cds-parsers")
