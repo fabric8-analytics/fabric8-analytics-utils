@@ -1,5 +1,6 @@
 """Test f8a_worker.commands.command module."""
 import os
+import time
 import pytest
 import subprocess
 
@@ -59,6 +60,9 @@ def test_kill_children():
     assert cmd.run(timeout=1) is False
     child_pid = int(cmd.stdout)
     try:
+        # All processes in the group should be killed by SIGKILL,
+        # but `os.killpg` doesn't wait for them to die...
+        time.sleep(3)
         os.kill(child_pid, 0)
     except OSError:
         # there is no process with such pid
