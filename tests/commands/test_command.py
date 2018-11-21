@@ -21,6 +21,13 @@ def test_input_validation():
     """Test input validation."""
     with pytest.raises(ValueError):
         ExternalCommand('bash')
+    with pytest.raises(ValueError):
+        ExternalCommand(None)
+
+
+def test_no_failure_no_raise():
+    """Test that no exception is thrown when no failure happens."""
+    ExternalCommand(['bash', '-c', 'true']).run(raise_on_error=True)
 
 
 def test_failure_raise():
