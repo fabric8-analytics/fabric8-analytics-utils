@@ -78,9 +78,9 @@ class DependencyFinder():
                 line = line.replace('"', '')
                 line = line.replace(' ;', '')
                 pref, suff = line.strip().split(" -> ")
-                if pref == suffix and suff not in trans:
+                parsed_json = DependencyFinder._parse_string(suff)
+                if pref == suffix and suff not in trans and parsed_json['classifier'] != 'test':
                     trans.append(suff)
-                    parsed_json = DependencyFinder._parse_string(suff)
                     tmp_json = {
                         "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
                         "version": parsed_json['version']
