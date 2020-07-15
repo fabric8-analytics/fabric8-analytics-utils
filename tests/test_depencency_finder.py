@@ -57,7 +57,7 @@ def test_scan_and_find_dependencies_pypi_pylist_as_bytes():
     assert len(res['result'][0]['details'][0]['_resolved'][0]['deps']) == 1
 
 
-def test_scan_and_find_dependencies_maven():
+def test_scan_and_find_dependencies_maven_with_transitives():
     """Test scan_and_find_dependencies function for Maven."""
     manifests = [{
         "filename": "dependencies.txt",
@@ -71,7 +71,7 @@ def test_scan_and_find_dependencies_maven():
     assert len(resolved['deps']) == 15
 
 
-def test_scan_and_find_dependencies_maven_manifest_as_bytes():
+def test_scan_and_find_dependencies_maven_without_transitives():
     """Test scan_and_find_dependencies function for Maven."""
     # file containing content should be opened as binary stream
     manifests = [{
@@ -113,12 +113,33 @@ def test_scan_and_find_dependencies_maven_invalid_coordinates():
         assert res
 
 
+def test_scan_and_find_dependencies_maven_ignore_test_deps():
+    """Test scan_and_find_dependencies function for Maven."""
+    manifests = [{
+        "filename": "dependencies.txt",
+        "filepath": "/bin/local",
+        "content": open(str(Path(__file__).parent / "data/dependencies.txt")).read()
+    }]
+    res = DependencyFinder().scan_and_find_dependencies("maven", manifests, "true")
+    assert "result" in res
+    # Look for 'io.rest-assured:rest-assured' package, it has '18' test deps.
+    found_package = False
+    for resolved in res['result'][0]['details'][0]['_resolved']:
+        if resolved['package'] == 'io.rest-assured:rest-assured':
+            found_package = True
+            # Actually there are 18 test transitive for package, but we are filtering test packages.
+            # So, expect to have '0' transitive deps.
+            assert len(resolved['deps']) == 0
+    assert found_package == True
+
+
 if __name__ == '__main__':
     test_scan_and_find_dependencies_npm()
     test_scan_and_find_dependencies_npm_npm_list_as_bytes()
     test_scan_and_find_dependencies_pypi()
     test_scan_and_find_dependencies_pypi_pylist_as_bytes()
-    test_scan_and_find_dependencies_maven()
-    test_scan_and_find_dependencies_maven_manifest_as_bytes()
-    test_scan_and_find_dependencies_maven_various_ncols()
+    test_scan_and_find_dependencies_maven_with_transitives()
+    test_scan_and_find_dependencies_maven_without_transitives()
     test_scan_and_find_dependencies_maven_invalid_coordinates()
+    test_scan_and_find_dependencies_maven_various_ncols()
+    test_scan_and_find_dependencies_maven_ignore_test_deps()
