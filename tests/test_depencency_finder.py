@@ -130,7 +130,7 @@ def test_scan_and_find_dependencies_maven_ignore_test_deps():
             # Actually there are 18 test transitive for package, but we are filtering test packages.
             # So, expect to have '0' transitive deps.
             assert len(resolved['deps']) == 0
-    assert found_package == True
+    assert found_package
 
 
 if __name__ == '__main__':
