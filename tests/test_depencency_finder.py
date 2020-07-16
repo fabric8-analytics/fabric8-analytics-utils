@@ -122,15 +122,8 @@ def test_scan_and_find_dependencies_maven_ignore_test_deps():
     }]
     res = DependencyFinder().scan_and_find_dependencies("maven", manifests, "true")
     assert "result" in res
-    # Look for 'io.rest-assured:rest-assured' package, it has '18' test deps.
-    found_package = False
-    for resolved in res['result'][0]['details'][0]['_resolved']:
-        if resolved['package'] == 'io.rest-assured:rest-assured':
-            found_package = True
-            # Actually there are 18 test transitive for package, but we are filtering test packages.
-            # So, expect to have '0' transitive deps.
-            assert len(resolved['deps']) == 0
-    assert found_package
+    # There are total 9 packages, but 4 are non-test packages.
+    assert 4 == len(res['result'][0]['details'][0]['_resolved'])
 
 
 if __name__ == '__main__':

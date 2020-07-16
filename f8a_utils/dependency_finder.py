@@ -45,7 +45,7 @@ class DependencyFinder():
                     line = line.replace(' ;', '')
                     prefix, suffix = line.strip().split(" -> ")
                     parsed_json = DependencyFinder._parse_string(suffix)
-                    if prefix == module and suffix not in direct:
+                    if prefix == module and suffix not in direct and parsed_json['scope'] != 'test':
                         transitive = []
                         trans = []
                         direct.append(suffix)
@@ -79,7 +79,7 @@ class DependencyFinder():
                 line = line.replace(' ;', '')
                 pref, suff = line.strip().split(" -> ")
                 parsed_json = DependencyFinder._parse_string(suff)
-                if pref == suffix and suff not in trans and parsed_json['classifier'] != 'test':
+                if pref == suffix and suff not in trans and parsed_json['scope'] != 'test':
                     trans.append(suff)
                     tmp_json = {
                         "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
@@ -110,9 +110,8 @@ class DependencyFinder():
         elif ncolons == 3:
             a['groupId'], a['artifactId'], a['packaging'], a['version'] = coordinates_str.split(':')
         elif ncolons == 4:
-            # Usually, it's groupId:artifactId:packaging:classifier:version but here it's
-            # groupId:artifactId:packaging:version:classifier
-            a['groupId'], a['artifactId'], a['packaging'], a['version'], a['classifier'] = \
+            # groupId:artifactId:packaging:version:scope
+            a['groupId'], a['artifactId'], a['packaging'], a['version'], a['scope'] = \
                 coordinates_str.split(':')
         elif ncolons == 5:
             # groupId:artifactId:packaging:classifier:version:scope
