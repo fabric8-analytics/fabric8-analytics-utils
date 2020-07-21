@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 
 
 def get_requirements():
-    """Parse dependencies from 'requirements.txt' file."""
-    with open('requirements.txt') as fd:
+    """Parse dependencies from 'requirements.in' file."""
+    with open('requirements.in') as fd:
         lines = fd.read().splitlines()
         requires, links = [], []
         for line in lines:

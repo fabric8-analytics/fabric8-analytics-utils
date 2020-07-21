@@ -10,7 +10,8 @@ from f8a_utils.versions import (
     get_versions_for_ep,
     get_latest_versions_for_ep,
     is_pkg_public,
-    get_versions_and_latest_for_ep
+    get_versions_and_latest_for_ep,
+    select_latest_version
 )
 
 
@@ -242,3 +243,10 @@ def test_get_latest_versions_for_ep():
 
     with pytest.raises(ValueError):
         get_latest_versions_for_ep("maven", None)
+
+
+def test_select_vesion_empty():
+    """Test empty version list use-case."""
+    assert "" == select_latest_version()
+
+    assert "" == select_latest_version([])
