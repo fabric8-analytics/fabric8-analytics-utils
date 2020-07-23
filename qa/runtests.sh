@@ -39,7 +39,6 @@ function prepare_venv() {
         exit 1
     fi
     pip install -U pip
-    python3 "$(which pip3)" install -r requirements.txt
     python3 "$(which pip3)" install -r tests/requirements.txt
 }
 
