@@ -17,7 +17,7 @@ def get_requirements():
 install_requires = get_requirements()
 
 setup(
-    name='fabric8-analytics-utils',
+    name='f8a-utils',
     version='0.1.0',
     description='Library containing utilities and helper functions for f8a services',
     install_requires=install_requires,
