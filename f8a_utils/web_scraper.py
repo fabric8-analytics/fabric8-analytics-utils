@@ -73,7 +73,8 @@ class Scraper:
 
 
 """
-This code is kept commented with purpose: If anyone wants to try out scraper, its easier to follow these examples
+This code is kept commented with purpose: If anyone wants to try out scraper. 
+Its easier to follow these examples
 if __name__ == '__main__':
 
     url = "https://pkg.go.dev/github.com/kubernetes/kubernetes/pkg/volume/scaleio?tab=versions"
@@ -83,12 +84,16 @@ if __name__ == '__main__':
     print("--latest--")
     print(scraper.get_value('div', {'class': 'DetailsHeader-version'}))
 
-    url = "https://pkg.go.dev/github.com/kubernetes/kubernetes/pkg/volume/scaleio?tab=overview" #Overview for mod
+    url = "https://pkg.go.dev/github.com/kubernetes/kubernetes/pkg/volume/scaleio?tab=overview"
     scraper = Scraper(url)
     print("--gh link--")
-    print(scraper.get_value('a', None, 'href', scraper.get_sub_data('p', {'class': 'Overview-sourceCodeLink'})))
+    print(scraper.get_value(
+        'a', None, 'href', 
+        scraper.get_sub_data('p', {'class': 'Overview-sourceCodeLink'})))
     print("--license--")
-    print(scraper.get_value('a', None, None, scraper.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})))
+    print(scraper.get_value(
+        'a', None, None, 
+        scraper.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})))
 
     url = "https://pkg.go.dev/mod/k8s.io/kubelet?tab=versions"
     scraper = Scraper(url)
@@ -100,9 +105,13 @@ if __name__ == '__main__':
     url = "https://pkg.go.dev/mod/github.com/Rican7/retry?tab=Overview" #Overview for mod
     scraper = Scraper(url)
     print("--gh link--")
-    print(scraper.get_value('a', None, 'href', scraper.get_sub_data('p', {'class': 'Overview-sourceCodeLink'})))
+    print(scraper.get_value(
+        'a', None, 'href', 
+        scraper.get_sub_data('p', {'class': 'Overview-sourceCodeLink'})))
     print("--license--")
-    print(scraper.get_value('a', None, None, scraper.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})))
+    print(scraper.get_value(
+        'a', None, None, 
+        scraper.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})))
 
     url = "https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core"
     scraper = Scraper(url)
