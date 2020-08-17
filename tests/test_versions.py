@@ -11,7 +11,8 @@ from f8a_utils.versions import (
     get_latest_versions_for_ep,
     is_pkg_public,
     get_versions_and_latest_for_ep,
-    select_latest_version
+    select_latest_version,
+    get_versions_for_golang_package
 )
 
 
@@ -51,6 +52,11 @@ def test_get_versions_and_latest_for_ep():
     obj = get_versions_and_latest_for_ep("maven", "tomcat:catalina")
     assert obj['versions'] is not None
     assert "4.0.4" in obj['versions']
+    assert obj['latest_version'] is not None
+
+    obj = get_versions_and_latest_for_ep("golang", "github.com/grafana/grafana")
+    assert obj['versions'] is not None
+    assert "v6.1.6" in obj['versions']
     assert obj['latest_version'] is not None
 
     with pytest.raises(ValueError):
@@ -142,6 +148,19 @@ def test_get_javascript_versions_server_response_without_json(_mocked_get):
     assert not package_versions
 
 
+def test_get_golang_versions():
+    """Test basic behavior of function get_versions_for_golang_package."""
+    versions = get_versions_for_golang_package("github.com/grafana/grafana")
+    assert versions is not None
+
+    versions = get_versions_for_golang_package("some_junk_name")
+    assert versions is None
+
+    versions = get_versions_for_ep("golang", "github.com/grafana/grafana")
+    assert versions is not None
+    assert "v6.1.6" in versions
+
+
 def test_get_python_versions():
     """Test basic behavior of function get_versions_for_pypi_package."""
     package_versions = get_versions_for_pypi_package("numpy")
@@ -228,6 +247,12 @@ def test_get_latest_versions_for_ep():
 
     package_versions = get_latest_versions_for_ep("npm", "lerna-tt-pk2-sy")
     assert package_versions is not None
+
+    package_versions = get_latest_versions_for_ep("golang", "github.com/grafana/grafana")
+    assert package_versions is not None
+
+    package_versions = get_latest_versions_for_ep("golang", "no_such_pkg_exist")
+    assert not package_versions
 
     package_versions = get_latest_versions_for_ep("npm", "abyzdeopkl")
     assert not package_versions

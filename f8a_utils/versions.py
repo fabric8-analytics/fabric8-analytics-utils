@@ -5,6 +5,7 @@ import logging
 from urllib.request import urlopen
 from lxml import etree
 from f8a_version_comparator.comparable_version import ComparableVersion
+from f8a_utils.golang_utils import GolangUtils
 
 _logger = logging.getLogger(__name__)
 
@@ -26,6 +27,8 @@ def get_versions_and_latest_for_ep(ecosystem, package_name):
         return get_versions_for_pypi_package(package_name, dual_values=True)
     if ecosystem == 'maven':
         return get_versions_for_maven_package(package_name, dual_values=True)
+    if ecosystem == 'golang':
+        return get_versions_for_golang_package(package_name, dual_values=True)
     else:
         raise ValueError('Unsupported ecosystem: {e}'.format(e=ecosystem))
 
@@ -47,6 +50,8 @@ def get_versions_for_ep(ecosystem, package_name):
         return get_versions_for_pypi_package(package_name)
     if ecosystem == 'maven':
         return get_versions_for_maven_package(package_name)
+    if ecosystem == 'golang':
+        return get_versions_for_golang_package(package_name)
     else:
         raise ValueError('Unsupported ecosystem: {e}'.format(e=ecosystem))
 
@@ -76,9 +81,30 @@ def get_latest_versions_for_ep(ecosystem, package_name):
         version = get_versions_for_pypi_package(package_name, True)
     elif ecosystem == 'maven':
         version = get_versions_for_maven_package(package_name, True)
+    elif ecosystem == 'golang':
+        version = get_versions_for_golang_package(package_name, True)
     else:
         raise ValueError('Unsupported ecosystem: {e}'.format(e=ecosystem))
     return version
+
+
+def get_versions_for_golang_package(package_name, latest=False, dual_values=False):
+    """Get all versions for given golang package.
+
+    :param package_name: str, package name
+    :param latest: boolean value, to return only the latest version
+    :param dual_values: boolean value, to return both version list and latest version
+    :return list, list of versions
+    """
+    go_util = GolangUtils(package_name)
+    latest_ver = go_util.get_latest_version()
+    all_ver = go_util.get_all_versions()
+    if latest:
+        return latest_ver
+    if dual_values:
+        return {'versions': all_ver,
+                'latest_version': latest_ver}
+    return all_ver
 
 
 def get_versions_for_npm_package(package_name, latest=False, dual_values=False):
