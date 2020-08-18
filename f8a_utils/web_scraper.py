@@ -73,7 +73,7 @@ class Scraper:
 
 
 """
-This code is kept commented with purpose: If anyone wants to try out scraper. 
+This code is kept commented with purpose: If anyone wants to try out scraper.
 Its easier to follow these examples
 if __name__ == '__main__':
 
@@ -88,11 +88,11 @@ if __name__ == '__main__':
     scraper = Scraper(url)
     print("--gh link--")
     print(scraper.get_value(
-        'a', None, 'href', 
+        'a', None, 'href',
         scraper.get_sub_data('p', {'class': 'Overview-sourceCodeLink'})))
     print("--license--")
     print(scraper.get_value(
-        'a', None, None, 
+        'a', None, None,
         scraper.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})))
 
     url = "https://pkg.go.dev/mod/k8s.io/kubelet?tab=versions"
@@ -106,11 +106,11 @@ if __name__ == '__main__':
     scraper = Scraper(url)
     print("--gh link--")
     print(scraper.get_value(
-        'a', None, 'href', 
+        'a', None, 'href',
         scraper.get_sub_data('p', {'class': 'Overview-sourceCodeLink'})))
     print("--license--")
     print(scraper.get_value(
-        'a', None, None, 
+        'a', None, None,
         scraper.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})))
 
     url = "https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core"
