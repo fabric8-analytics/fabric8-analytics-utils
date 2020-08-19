@@ -56,7 +56,7 @@ def test_get_versions_and_latest_for_ep():
 
     obj = get_versions_and_latest_for_ep("golang", "github.com/grafana/grafana")
     assert obj['versions'] is not None
-    assert "v6.1.6" in obj['versions']
+    assert "6.1.6" in obj['versions']
     assert obj['latest_version'] is not None
 
     with pytest.raises(ValueError):
@@ -158,7 +158,7 @@ def test_get_golang_versions():
 
     versions = get_versions_for_ep("golang", "github.com/grafana/grafana")
     assert versions is not None
-    assert "v6.1.6" in versions
+    assert "6.1.6" in versions
 
 
 def test_get_python_versions():

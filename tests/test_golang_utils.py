@@ -7,7 +7,8 @@ def test_golang_utils_with_valid_pkg():
     """Test golang functions with a valid pkg."""
     go_obj = GolangUtils("github.com/grafana/grafana")
     assert go_obj.mode == "mod"
-    assert "v6.1.4" in go_obj.get_all_versions()
+    assert "6.1.4" in go_obj.get_all_versions()
+    assert "v6.1.4" not in go_obj.get_all_versions()
     assert go_obj.get_latest_version() is not None
     assert go_obj.get_gh_link() == "https://github.com/grafana/grafana"
     assert go_obj.get_license() == "Apache-2.0"
@@ -22,7 +23,7 @@ def test_golang_utils_with_valid_pkg2():
     """Test golang functions with a valid pkg."""
     go_obj = GolangUtils("github.com/containous/traefik/api")
     assert go_obj.mode == "pkg"
-    assert "v1.7.26" in go_obj.get_all_versions()
+    assert "1.7.26" in go_obj.get_all_versions()
     assert go_obj.get_latest_version() is not None
     assert go_obj.get_license() == "MIT"
     assert go_obj.get_gh_link() == "https://github.com/containous/traefik"

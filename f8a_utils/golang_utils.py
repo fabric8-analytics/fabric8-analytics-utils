@@ -43,9 +43,18 @@ class GolangUtils:
             final_list = []
             for ver in ver_list:
                 if "+incompatible" in ver:
-                    final_list.append(ver.split('+incompatible')[0])
+                    intermediate_value = ver.split('+incompatible')[0]
+                    if "v" in intermediate_value:
+                        version = intermediate_value.split('v')[1]
+                    else:
+                        version = intermediate_value
+                    final_list.append(version)
                 else:
-                    final_list.append(ver)
+                    if "v" in ver:
+                        version = ver.split('v')[1]
+                    else:
+                        version = ver
+                    final_list.append(version)
             return final_list
         return ver_list
 
@@ -53,7 +62,14 @@ class GolangUtils:
         """Fetch the latest version of a pkg."""
         latest_ver = obj.get_value('div', {'class': 'DetailsHeader-version'})
         if "+incompatible" in latest_ver:
-            latest_ver = latest_ver.split('+incompatible')[0]
+            intermediate_value = latest_ver.split('+incompatible')[0]
+            if "v" in intermediate_value:
+                latest_ver = intermediate_value.split('v')[1]
+            else:
+                latest_ver = intermediate_value
+        else:
+            if "v" in latest_ver:
+                latest_ver = latest_ver.split('v')[1]
         return latest_ver
 
     def __fetch_license(self, obj):
