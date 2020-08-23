@@ -42,12 +42,17 @@ class Scraper:
 
     def get_value(self, tag, attrs=None, param=None, obj=None):
         """Fetch the text value or param value of a tag from HTML content."""
+        val = None
         if not obj:
             obj = self.DATA
         if not param:
-            val = obj.find(tag, attrs=attrs).text
+            obj_val = obj.find(tag, attrs=attrs)
+            if obj_val:
+                val = obj_val.text
         else:
-            val = obj.find(tag, attrs=attrs)[param]
+            obj_val = obj.find(tag, attrs=attrs)
+            if obj_val:
+                val = obj_val[param]
         return val
 
     def get_list(self, tag, attrs=None, obj=None):

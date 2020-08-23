@@ -33,6 +33,11 @@ def test_golang_utils_with_valid_pkg2():
     assert go_obj.get_gh_link() == "https://github.com/ryanuber/columnize"
     assert go_obj.get_license() == "MIT"
 
+    go_obj = GolangUtils("github.com/qor/admin")
+    assert go_obj.mode == "pkg"
+    assert go_obj.get_gh_link() == "https://github.com/qor/admin"
+    assert go_obj.get_license() is None
+
 
 def test_golang_utils_with_invalid_pkg():
     """Test golang functions with a invalid pkg."""
