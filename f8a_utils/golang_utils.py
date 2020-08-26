@@ -74,9 +74,9 @@ class GolangUtils:
 
     def __fetch_license(self, obj):
         """Fetch the github link of a pkg."""
-        return obj.get_value(
-            'a', None, None,
-            obj.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'}))
+        sub_obj = obj.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})
+        lic_list = obj.get_value_from_list('a', None, None, None, None, sub_obj)
+        return lic_list
 
     def __fetch_gh_link(self, obj):
         """Fetch the github link of a pkg."""
