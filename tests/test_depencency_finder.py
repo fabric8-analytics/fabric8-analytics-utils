@@ -1,4 +1,5 @@
 """Tests for classes from depencency_finder module."""
+import json
 
 from f8a_utils.dependency_finder import DependencyFinder
 from pathlib import Path
@@ -42,6 +43,19 @@ def test_scan_and_find_dependencies_pypi():
     assert "result" in res
     assert res['result'][0]['details'][0]['_resolved'][0]['package'] == "django"
     assert len(res['result'][0]['details'][0]['_resolved'][0]['deps']) == 1
+
+
+def test_scan_and_find_dependencies_golang():
+    """Test scan_and_find_dependencies function for golang."""
+    manifests = [{
+        "filename": "gograph.txt",
+        "filepath": "/bin/local",
+        "content": open(str(Path(__file__).parent / "data/gograph.txt")).read()
+    }]
+    with open(str(Path(__file__).parent / "data/golang_dep_tree.json")) as fp:
+        dep_tree = json.load(fp)
+    res = DependencyFinder().scan_and_find_dependencies("golang", manifests, "true")
+    assert res == dep_tree
 
 
 def test_scan_and_find_dependencies_pypi_pylist_as_bytes():

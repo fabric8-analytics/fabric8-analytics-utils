@@ -1,6 +1,7 @@
 """Definition of a class to find dependencies from an input manifest file."""
 
 import json
+import semver
 
 
 class DependencyFinder():
@@ -17,6 +18,8 @@ class DependencyFinder():
             deps = DependencyFinder.get_pypi_dependencies(ecosystem, manifests)
         elif ecosystem == "maven":
             deps = DependencyFinder.get_maven_dependencies(ecosystem, manifests, show_transitive)
+        elif ecosystem == "golang":
+            deps = DependencyFinder.get_golang_dependencies(ecosystem, manifests, show_transitive)
         return deps
 
     @staticmethod
@@ -206,3 +209,102 @@ class DependencyFinder():
             result.append(details_json)
         deps['result'] = result
         return deps
+
+    @staticmethod
+    def get_golang_dependencies(ecosystem, manifests, show_transitive):
+        """Check Go Lang Dependencies."""
+        details = []
+        final = {}
+        result = []
+        for manifest in manifests:
+            dep = {
+                "ecosystem": ecosystem,
+                "manifest_file_path": manifest['filepath'],
+                "manifest_file": manifest['filename']
+            }
+            resolved = []
+            direct_dep_list = []
+            dependencies = DependencyFinder.clean_golang_dependencies(manifest['content'])
+            for dependency in dependencies:
+                # Find out Direct Dependencies listed against Module Package.
+                prefix, direct_dep = dependency.strip().split(" ")
+                if '@' not in prefix and (direct_dep not in direct_dep_list):
+                    # Only Module Packages have no @ in Prefix.
+                    parsed_json = DependencyFinder.parse_go_string(direct_dep)
+                    transitive_list = []
+                    trans = []
+                    if show_transitive:
+                        transitive_list = DependencyFinder.get_go_transitives(
+                            dependencies, transitive_list, direct_dep, trans)
+                    parsed_json["deps"] = transitive_list
+                    resolved.append(parsed_json)
+            dep['_resolved'] = resolved
+            details.append(dep)
+        result.append({"details": details})
+        final["result"] = result
+        return final
+
+    @staticmethod
+    def get_go_transitives(data, transitive, suffix, trans):
+        """Scan the golang transitive deps."""
+        for line in data:
+            pref, suff = line.strip().split(" ")
+            if pref == suffix and suff not in trans:
+                trans.append(suff)
+                parsed_json = DependencyFinder.parse_go_string(suff)
+                transitive.append(parsed_json)
+                transitive = DependencyFinder.get_go_transitives(data, transitive, suff, trans)
+        return transitive
+
+    @staticmethod
+    def parse_go_string(deps_string):
+        """Parse string representation into a dictionary."""
+        a = {
+            'from': deps_string,
+            'package': '',
+            'given_version': '',
+            'is_semver': False,
+            'version': ''
+        }
+
+        ncolons = deps_string.count('@')
+        if ncolons == 0:
+            a['package'] = deps_string
+        elif ncolons == 1:
+            a['package'], a['given_version'] = deps_string.split('@')
+        else:
+            raise ValueError('Invalid Golang Pkg %s', deps_string)
+
+        a['is_semver'], a['version'] = DependencyFinder.clean_version(a['given_version'])
+        return a
+
+    @staticmethod
+    def clean_golang_dependencies(dependencies: str) -> list:
+        """Clean Golang Dep."""
+        if isinstance(dependencies, bytes):
+            dependencies = dependencies.decode("utf-8")
+        dependencies = dependencies[:dependencies.rfind('\n')]
+        return dependencies.split('\n')
+
+    @staticmethod
+    def clean_version(version):
+        """Clean Version."""
+        version = version.replace('v', '')
+        is_semver = semver.VersionInfo.isvalid(version)
+        if is_semver:
+            version = str(semver.VersionInfo.parse(version))
+        version = version.split('+')[0]
+        return is_semver, version
+
+
+if __name__ == '__main__':
+    from pathlib import Path
+    manifests = [{
+        "filename": "gograph.txt",
+        "filepath": "/bin/local",
+        "content": open(str(Path(__file__).parent.parent / "tests/data/gograph.txt")).read()
+    }]
+    test = DependencyFinder.scan_and_find_dependencies(
+        'golang', manifests, "true")
+    with open('golist2.json', 'w') as fp:
+        fp.write(json.dumps(test))
