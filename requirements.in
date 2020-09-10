@@ -1,4 +1,6 @@
 lxml
 requests
 bs4
+cryptography
+tenacity
 f8a_version_comparator @ git+https://github.com/fabric8-analytics/fabric8-analytics-version-comparator.git@8a57ac7#egg=f8a_version_comparator
