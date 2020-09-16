@@ -58,6 +58,27 @@ def test_scan_and_find_dependencies_golang():
     assert res == dep_tree
 
 
+def test_parse_go_string():
+    """Test for Parse go string."""
+    ideal_res = {'from': 'github.com/hashicorp/consul/sdk@v0.1.1',
+                 'package': 'github.com/hashicorp/consul/sdk',
+                 'given_version': 'v0.1.1',
+                 'is_semver': True,
+                 'version': '0.1.1'}
+    res = DependencyFinder().parse_go_string('github.com/hashicorp/consul/sdk@v0.1.1')
+    assert res == ideal_res
+
+
+def test_clean_version():
+    """Test clean version."""
+    is_semver, cleaned_vr = DependencyFinder().clean_version('v0.0.0-20190718012654-fb15b899a751')
+    assert is_semver
+    assert cleaned_vr == '0.0.0-20190718012654-fb15b899a751'
+    is_semver, cleaned_vr = DependencyFinder().clean_version('v2.1.4+incompatible')
+    assert is_semver
+    assert cleaned_vr == '2.1.4'
+
+
 def test_scan_and_find_dependencies_pypi_pylist_as_bytes():
     """Test scan_and_find_dependencies function for PyPi."""
     manifests = [{
@@ -120,7 +141,7 @@ def test_scan_and_find_dependencies_maven_invalid_coordinates():
         "filename": "dependencies.txt",
         "filepath": "/bin/local",
         "content":
-        open(str(Path(__file__).parent / "data/dependencies_invalid_coordinates.txt")).read()
+            open(str(Path(__file__).parent / "data/dependencies_invalid_coordinates.txt")).read()
     }]
     with pytest.raises(ValueError):
         res = DependencyFinder().scan_and_find_dependencies("maven", manifests, "true")
