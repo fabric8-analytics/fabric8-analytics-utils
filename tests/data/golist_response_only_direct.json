@@ -1,0 +1,319 @@
+{
+    "result": [
+        {
+            "details": [
+                {
+                    "ecosystem": "golang",
+                    "manifest_file_path": "/bin/local",
+                    "manifest_file": "gograph.txt",
+                    "_resolved": [
+                        {
+                            "from": "github.com/99designs/keyring@v1.1.5",
+                            "package": "github.com/99designs/keyring",
+                            "given_version": "v1.1.5",
+                            "is_semver": true,
+                            "version": "1.1.5",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/armon/go-metrics@v0.3.3",
+                            "package": "github.com/armon/go-metrics",
+                            "given_version": "v0.3.3",
+                            "is_semver": true,
+                            "version": "0.3.3",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/bgentry/speakeasy@v0.1.0",
+                            "package": "github.com/bgentry/speakeasy",
+                            "given_version": "v0.1.0",
+                            "is_semver": true,
+                            "version": "0.1.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/btcsuite/btcd@v0.20.1-beta",
+                            "package": "github.com/btcsuite/btcd",
+                            "given_version": "v0.20.1-beta",
+                            "is_semver": true,
+                            "version": "0.20.1-beta",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/confio/ics23-iavl@v0.6.0",
+                            "package": "github.com/confio/ics23-iavl",
+                            "given_version": "v0.6.0",
+                            "is_semver": true,
+                            "version": "0.6.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/confio/ics23/go@v0.0.0-20200604202538-6e2c36a74465",
+                            "package": "github.com/confio/ics23/go",
+                            "given_version": "v0.0.0-20200604202538-6e2c36a74465",
+                            "is_semver": true,
+                            "version": "0.0.0-20200604202538-6e2c36a74465",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/cosmos/go-bip39@v0.0.0-20180819234021-555e2067c45d",
+                            "package": "github.com/cosmos/go-bip39",
+                            "given_version": "v0.0.0-20180819234021-555e2067c45d",
+                            "is_semver": true,
+                            "version": "0.0.0-20180819234021-555e2067c45d",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/cosmos/ledger-cosmos-go@v0.11.1",
+                            "package": "github.com/cosmos/ledger-cosmos-go",
+                            "given_version": "v0.11.1",
+                            "is_semver": true,
+                            "version": "0.11.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/enigmampc/btcutil@v1.0.3-0.20200723161021-e2fb6adb2a25",
+                            "package": "github.com/enigmampc/btcutil",
+                            "given_version": "v1.0.3-0.20200723161021-e2fb6adb2a25",
+                            "is_semver": true,
+                            "version": "1.0.3-0.20200723161021-e2fb6adb2a25",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/gibson042/canonicaljson-go@v1.0.3",
+                            "package": "github.com/gibson042/canonicaljson-go",
+                            "given_version": "v1.0.3",
+                            "is_semver": true,
+                            "version": "1.0.3",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/gogo/protobuf@v1.3.1",
+                            "package": "github.com/gogo/protobuf",
+                            "given_version": "v1.3.1",
+                            "is_semver": true,
+                            "version": "1.3.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/golang/mock@v1.4.3",
+                            "package": "github.com/golang/mock",
+                            "given_version": "v1.4.3",
+                            "is_semver": true,
+                            "version": "1.4.3",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/golang/protobuf@v1.4.2",
+                            "package": "github.com/golang/protobuf",
+                            "given_version": "v1.4.2",
+                            "is_semver": true,
+                            "version": "1.4.2",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/gorilla/handlers@v1.4.2",
+                            "package": "github.com/gorilla/handlers",
+                            "given_version": "v1.4.2",
+                            "is_semver": true,
+                            "version": "1.4.2",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/gorilla/mux@v1.7.4",
+                            "package": "github.com/gorilla/mux",
+                            "given_version": "v1.7.4",
+                            "is_semver": true,
+                            "version": "1.7.4",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/hashicorp/golang-lru@v0.5.4",
+                            "package": "github.com/hashicorp/golang-lru",
+                            "given_version": "v0.5.4",
+                            "is_semver": true,
+                            "version": "0.5.4",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/mattn/go-isatty@v0.0.12",
+                            "package": "github.com/mattn/go-isatty",
+                            "given_version": "v0.0.12",
+                            "is_semver": true,
+                            "version": "0.0.12",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/otiai10/copy@v1.2.0",
+                            "package": "github.com/otiai10/copy",
+                            "given_version": "v1.2.0",
+                            "is_semver": true,
+                            "version": "1.2.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/pelletier/go-toml@v1.8.0",
+                            "package": "github.com/pelletier/go-toml",
+                            "given_version": "v1.8.0",
+                            "is_semver": true,
+                            "version": "1.8.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/pkg/errors@v0.9.1",
+                            "package": "github.com/pkg/errors",
+                            "given_version": "v0.9.1",
+                            "is_semver": true,
+                            "version": "0.9.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/prometheus/client_golang@v1.7.1",
+                            "package": "github.com/prometheus/client_golang",
+                            "given_version": "v1.7.1",
+                            "is_semver": true,
+                            "version": "1.7.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/prometheus/common@v0.10.0",
+                            "package": "github.com/prometheus/common",
+                            "given_version": "v0.10.0",
+                            "is_semver": true,
+                            "version": "0.10.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/rakyll/statik@v0.1.7",
+                            "package": "github.com/rakyll/statik",
+                            "given_version": "v0.1.7",
+                            "is_semver": true,
+                            "version": "0.1.7",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/regen-network/cosmos-proto@v0.3.0",
+                            "package": "github.com/regen-network/cosmos-proto",
+                            "given_version": "v0.3.0",
+                            "is_semver": true,
+                            "version": "0.3.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/spf13/afero@v1.2.2",
+                            "package": "github.com/spf13/afero",
+                            "given_version": "v1.2.2",
+                            "is_semver": true,
+                            "version": "1.2.2",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/spf13/cast@v1.3.1",
+                            "package": "github.com/spf13/cast",
+                            "given_version": "v1.3.1",
+                            "is_semver": true,
+                            "version": "1.3.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/spf13/cobra@v1.0.0",
+                            "package": "github.com/spf13/cobra",
+                            "given_version": "v1.0.0",
+                            "is_semver": true,
+                            "version": "1.0.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/spf13/jwalterweatherman@v1.1.0",
+                            "package": "github.com/spf13/jwalterweatherman",
+                            "given_version": "v1.1.0",
+                            "is_semver": true,
+                            "version": "1.1.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/spf13/pflag@v1.0.5",
+                            "package": "github.com/spf13/pflag",
+                            "given_version": "v1.0.5",
+                            "is_semver": true,
+                            "version": "1.0.5",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/spf13/viper@v1.7.0",
+                            "package": "github.com/spf13/viper",
+                            "given_version": "v1.7.0",
+                            "is_semver": true,
+                            "version": "1.7.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/stretchr/testify@v1.6.1",
+                            "package": "github.com/stretchr/testify",
+                            "given_version": "v1.6.1",
+                            "is_semver": true,
+                            "version": "1.6.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/tendermint/btcd@v0.1.1",
+                            "package": "github.com/tendermint/btcd",
+                            "given_version": "v0.1.1",
+                            "is_semver": true,
+                            "version": "0.1.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/tendermint/crypto@v0.0.0-20191022145703-50d29ede1e15",
+                            "package": "github.com/tendermint/crypto",
+                            "given_version": "v0.0.0-20191022145703-50d29ede1e15",
+                            "is_semver": true,
+                            "version": "0.0.0-20191022145703-50d29ede1e15",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/tendermint/go-amino@v0.15.1",
+                            "package": "github.com/tendermint/go-amino",
+                            "given_version": "v0.15.1",
+                            "is_semver": true,
+                            "version": "0.15.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/tendermint/iavl@v0.14.0",
+                            "package": "github.com/tendermint/iavl",
+                            "given_version": "v0.14.0",
+                            "is_semver": true,
+                            "version": "0.14.0",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/tendermint/tendermint@v0.33.6",
+                            "package": "github.com/tendermint/tendermint",
+                            "given_version": "v0.33.6",
+                            "is_semver": true,
+                            "version": "0.33.6",
+                            "deps": []
+                        },
+                        {
+                            "from": "github.com/tendermint/tm-db@v0.5.1",
+                            "package": "github.com/tendermint/tm-db",
+                            "given_version": "v0.5.1",
+                            "is_semver": true,
+                            "version": "0.5.1",
+                            "deps": []
+                        },
+                        {
+                            "from": "google.golang.org/grpc@v1.30.0",
+                            "package": "google.golang.org/grpc",
+                            "given_version": "v1.30.0",
+                            "is_semver": true,
+                            "version": "1.30.0",
+                            "deps": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

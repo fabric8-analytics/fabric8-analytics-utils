@@ -284,6 +284,8 @@ class DependencyFinder():
         if isinstance(dependencies, bytes):
             dependencies = dependencies.decode("utf-8")
         dependencies = dependencies[:dependencies.rfind('\n')]
+        if not dependencies:
+            raise ValueError('Dependency list cannot be empty')
         return dependencies.split('\n')
 
     @staticmethod

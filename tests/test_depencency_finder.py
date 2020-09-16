@@ -1,5 +1,6 @@
 """Tests for classes from depencency_finder module."""
 import json
+import unittest
 
 from f8a_utils.dependency_finder import DependencyFinder
 from pathlib import Path
@@ -56,6 +57,32 @@ def test_scan_and_find_dependencies_golang():
         dep_tree = json.load(fp)
     res = DependencyFinder().scan_and_find_dependencies("golang", manifests, "true")
     assert res == dep_tree
+
+
+class TestDependencyFinder(unittest.TestCase):
+    """Test class."""
+
+    def test_scan_and_find_dependencies_golang_empty_input(self):
+        """Test scan_and_find_dependencies function for golang Empty."""
+        manifests = [{
+            "filename": "gograph.txt",
+            "filepath": "/bin/local",
+            "content": open(str(Path(__file__).parent / "data/gograph_empty.txt")).read()
+        }]
+        res = DependencyFinder().scan_and_find_dependencies
+        self.assertRaises(ValueError, res, "golang", manifests, "true")
+
+    def test_scan_and_find_dependencies_golang_only_direct(self):
+        """Test scan_and_find_dependencies function for golang Only Direct Deps."""
+        manifests = [{
+            "filename": "gograph.txt",
+            "filepath": "/bin/local",
+            "content": open(str(Path(__file__).parent / "data/gograph_only_direct.txt")).read()
+        }]
+        with open(str(Path(__file__).parent / "data/golist_response_only_direct.json")) as fp:
+            ideal_response = json.load(fp)
+        res = DependencyFinder().scan_and_find_dependencies("golang", manifests, "true")
+        self.assertEqual(res, ideal_response)
 
 
 def test_parse_go_string():
