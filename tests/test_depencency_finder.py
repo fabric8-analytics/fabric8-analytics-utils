@@ -81,7 +81,7 @@ def test_clean_version():
     assert is_semver
     assert cleaned_vr == '0.20.1-beta'
     is_semver, cleaned_vr = DependencyFinder().clean_version('v32$@12')
-    assert is_semver == False
+    assert not is_semver
     assert cleaned_vr == '32$@12'
 
 
