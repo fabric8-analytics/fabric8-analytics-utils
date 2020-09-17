@@ -110,6 +110,9 @@ def test_clean_version():
     is_semver, cleaned_vr = DependencyFinder().clean_version('v32$@12')
     assert not is_semver
     assert cleaned_vr == '32$@12'
+    is_semver, cleaned_vr = DependencyFinder().clean_version('v1.1.1-dev1')
+    assert is_semver
+    assert cleaned_vr == '1.1.1-dev1'
 
 
 def test_scan_and_find_dependencies_pypi_pylist_as_bytes():

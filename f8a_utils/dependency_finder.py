@@ -291,22 +291,9 @@ class DependencyFinder():
     @staticmethod
     def clean_version(version):
         """Clean Version."""
-        version = version.replace('v', '')
+        version = version.replace('v', '', 1)
         is_semver = semver.VersionInfo.isvalid(version)
         if is_semver:
             version = str(semver.VersionInfo.parse(version))
         version = version.split('+')[0]
         return is_semver, version
-
-
-if __name__ == '__main__':
-    from pathlib import Path
-    manifests = [{
-        "filename": "gograph.txt",
-        "filepath": "/bin/local",
-        "content": open(str(Path(__file__).parent.parent / "tests/data/gograph.txt")).read()
-    }]
-    test = DependencyFinder.scan_and_find_dependencies(
-        'golang', manifests, "true")
-    with open('golist2.json', 'w') as fp:
-        fp.write(json.dumps(test))
