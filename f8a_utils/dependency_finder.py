@@ -1,7 +1,142 @@
 """Definition of a class to find dependencies from an input manifest file."""
 
 import json
+from abc import ABC
+from pathlib import Path
 import semver
+
+
+def get_dependencies(eco):
+    """Get Dependency func.
+    :param eco: Ecosystem
+    :return: func. to execute.
+    """
+    func_dict = {
+        "npm": DependencyFinder.get_npm_dependencies,
+        "maven": DependencyFinder.get_maven_dependencies,
+        "pypi": DependencyFinder.get_pypi_dependencies,
+        "golang": DependencyFinder.get_golang_dependencies,
+    }
+    assert eco in func_dict, "Ecosystem not supported."
+    return func_dict.get(eco)
+
+
+class FactoryClass(ABC):
+    """Abstract class for Dependency Finder Ecosystem."""
+    def __init__(self):
+        self.df = DependencyFinder()
+
+    @staticmethod
+    def get_dependencies(manifests, show_transitive):
+        """Make Ecosystem Tree."""
+        pass
+
+    @staticmethod
+    def get_transitives(data, transitive, suffix, trans):
+        """Factory func. for calculating transitives."""
+        pass
+
+
+class MavenTree(FactoryClass):
+    """Generate Maven Dependency Tree."""
+
+    def get_dependencies(self, manifests, show_transitive):
+        """Scan the maven dependencies files to fetch transitive deps."""
+        deps = {}
+        result = []
+        details = []
+        direct = []
+        for manifest in manifests:
+            dep = {
+                "ecosystem": "maven",
+                "manifest_file_path": manifest['filepath'],
+                "manifest_file": manifest['filename']
+            }
+            resolved = []
+            data = manifest['content']
+
+            if isinstance(data, bytes):
+                data = data.decode("utf-8")
+
+            module = ''
+            for line in data.split("\n"):
+                if "->" in line:
+                    line = line.replace('"', '')
+                    line = line.replace(' ;', '')
+                    prefix, suffix = line.strip().split(" -> ")
+                    parsed_json = self._parse_string(suffix)
+                    if prefix == module and suffix not in direct and parsed_json['scope'] != 'test':
+                        transitive = []
+                        trans = []
+                        direct.append(suffix)
+                        if show_transitive is True:
+                            transitive = self._get_transitives(data, transitive, suffix, trans)
+                        tmp_json = {
+                            "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
+                            "version": parsed_json['version'],
+                            "deps": transitive
+                        }
+                        resolved.append(tmp_json)
+                else:
+                    module = line[line.find('"') + 1:line.rfind('"')]
+            dep['_resolved'] = resolved
+            details.append(dep)
+            details_json = {"details": details}
+            result.append(details_json)
+
+        deps['result'] = result
+        return deps
+
+    def _get_transitives(self, data, transitive, suffix, trans):
+        """Scan the maven dependencies files to fetch transitive deps."""
+        for line in data.split("\n"):
+            if suffix in line:
+                line = line.replace('"', '')
+                line = line.replace(' ;', '')
+                pref, suff = line.strip().split(" -> ")
+                parsed_json = self._parse_string(suff)
+                if pref == suffix and suff not in trans and parsed_json['scope'] != 'test':
+                    trans.append(suff)
+                    tmp_json = {
+                        "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
+                        "version": parsed_json['version']
+                    }
+                    transitive.append(tmp_json)
+                    transitive = DependencyFinder.get_maven_transitives(data,
+                                                                        transitive,
+                                                                        suff,
+                                                                        trans)
+        return transitive
+
+    @staticmethod
+    def _parse_string(coordinates_str):
+        """Parse string representation into a dictionary."""
+        a = {'groupId': '',
+             'artifactId': '',
+             'packaging': '',
+             'version': '',
+             'classifier': '',
+             'scope': ''}
+
+        ncolons = coordinates_str.count(':')
+        if ncolons == 1:
+            a['groupId'], a['artifactId'] = coordinates_str.split(':')
+        elif ncolons == 2:
+            a['groupId'], a['artifactId'], a['version'] = coordinates_str.split(':')
+        elif ncolons == 3:
+            a['groupId'], a['artifactId'], a['packaging'], a['version'] = coordinates_str.split(':')
+        elif ncolons == 4:
+            # groupId:artifactId:packaging:version:scope
+            a['groupId'], a['artifactId'], a['packaging'], a['version'], a['scope'] = \
+                coordinates_str.split(':')
+        elif ncolons == 5:
+            # groupId:artifactId:packaging:classifier:version:scope
+            a['groupId'], a['artifactId'], a['packaging'], a['classifier'], a['version'], \
+            a['scope'] = coordinates_str.split(':')
+        else:
+            raise ValueError('Invalid Maven coordinates %s', coordinates_str)
+
+        return a
 
 
 class DependencyFinder():
@@ -10,17 +145,10 @@ class DependencyFinder():
     @staticmethod
     def scan_and_find_dependencies(ecosystem, manifests, show_transitive):
         """Scan the dependencies files to fetch transitive deps."""
-        show_transitive = show_transitive == "true"
-        deps = dict()
-        if ecosystem == "npm":
-            deps = DependencyFinder.get_npm_dependencies(ecosystem, manifests, show_transitive)
-        elif ecosystem == "pypi":
-            deps = DependencyFinder.get_pypi_dependencies(ecosystem, manifests)
-        elif ecosystem == "maven":
-            deps = DependencyFinder.get_maven_dependencies(ecosystem, manifests, show_transitive)
-        elif ecosystem == "golang":
-            deps = DependencyFinder.get_golang_dependencies(ecosystem, manifests, show_transitive)
-        return deps
+        if type(show_transitive) is not bool:
+            show_transitive = show_transitive == "true"
+        func = get_dependencies(ecosystem)
+        return func(manifests, show_transitive)
 
     @staticmethod
     def get_maven_dependencies(ecosystem, manifests, show_transitive):
@@ -187,7 +315,7 @@ class DependencyFinder():
         return transitive
 
     @staticmethod
-    def get_pypi_dependencies(ecosystem, manifests):
+    def get_pypi_dependencies(ecosystem, manifests, show_transitives):      #noqa
         """Scan the pypi dependencies files to fetch transitive deps."""
         result = []
         details = []
