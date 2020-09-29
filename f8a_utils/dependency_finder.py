@@ -13,7 +13,7 @@ def get_dependencies(eco):
     """
     func_dict = {
         "npm": DependencyFinder.get_npm_dependencies,
-        "maven": DependencyFinder.get_maven_dependencies,
+        "maven": MavenTree().get_dependencies,
         "pypi": DependencyFinder.get_pypi_dependencies,
         "golang": DependencyFinder.get_golang_dependencies,
     }
@@ -24,17 +24,13 @@ def get_dependencies(eco):
 class TreeFactory(ABC):
     """Abstract class for Dependency Finder Ecosystem."""
 
-    def __init__(self):
-        """Initialise class func."""
-        self.df = DependencyFinder()
-
     @staticmethod
     def get_dependencies(manifests, show_transitive):
         """Make Ecosystem Tree."""
         pass
 
     @staticmethod
-    def get_transitives(data, transitive, suffix, trans):
+    def _get_transitives(data, transitive, suffix, trans):
         """func. for calculating transitives."""
         pass
 
@@ -104,10 +100,7 @@ class MavenTree(TreeFactory):
                         "version": parsed_json['version']
                     }
                     transitive.append(tmp_json)
-                    transitive = DependencyFinder.get_maven_transitives(data,
-                                                                        transitive,
-                                                                        suff,
-                                                                        trans)
+                    transitive = self._get_transitives(data, transitive, suff, trans)
         return transitive
 
     @staticmethod
@@ -150,10 +143,10 @@ class DependencyFinder():
         if type(show_transitive) is not bool:
             show_transitive = show_transitive == "true"
         func = get_dependencies(ecosystem)
-        return func(ecosystem, manifests, show_transitive)
+        return func(manifests, show_transitive)
 
     @staticmethod
-    def get_maven_dependencies(ecosystem, manifests, show_transitive):
+    def get_maven_dependencies(manifests, show_transitive):
         """Scan the maven dependencies files to fetch transitive deps."""
         deps = {}
         result = []
@@ -161,7 +154,7 @@ class DependencyFinder():
         direct = []
         for manifest in manifests:
             dep = {
-                "ecosystem": ecosystem,
+                "ecosystem": 'maven',
                 "manifest_file_path": manifest['filepath'],
                 "manifest_file": manifest['filename']
             }
@@ -256,14 +249,14 @@ class DependencyFinder():
         return a
 
     @staticmethod
-    def get_npm_dependencies(ecosystem, manifests, show_transitive):
+    def get_npm_dependencies(manifests, show_transitive):
         """Scan the npm dependencies files to fetch transitive deps."""
         deps = {}
         result = []
         details = []
         for manifest in manifests:
             dep = {
-                "ecosystem": ecosystem,
+                "ecosystem": "npm",
                 "manifest_file_path": manifest['filepath'],
                 "manifest_file": manifest['filename']
             }
@@ -317,14 +310,14 @@ class DependencyFinder():
         return transitive
 
     @staticmethod
-    def get_pypi_dependencies(ecosystem, manifests, show_transitives):      # noqa
+    def get_pypi_dependencies(manifests, show_transitives):      # noqa
         """Scan the pypi dependencies files to fetch transitive deps."""
         result = []
         details = []
         deps = {}
         for manifest in manifests:
             dep = {
-                "ecosystem": ecosystem,
+                "ecosystem": "pypi",
                 "manifest_file_path": manifest['filepath'],
                 "manifest_file": manifest['filename']
             }
@@ -341,14 +334,14 @@ class DependencyFinder():
         return deps
 
     @staticmethod
-    def get_golang_dependencies(ecosystem, manifests, show_transitive):
+    def get_golang_dependencies(manifests, show_transitive):
         """Check Go Lang Dependencies."""
         details = []
         final = {}
         result = []
         for manifest in manifests:
             dep = {
-                "ecosystem": ecosystem,
+                "ecosystem": "golang",
                 "manifest_file_path": manifest['filepath'],
                 "manifest_file": manifest['filename']
             }
