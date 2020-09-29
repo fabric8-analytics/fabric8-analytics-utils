@@ -2,12 +2,12 @@
 
 import json
 from abc import ABC
-from pathlib import Path
 import semver
 
 
 def get_dependencies(eco):
     """Get Dependency func.
+
     :param eco: Ecosystem
     :return: func. to execute.
     """
@@ -21,9 +21,11 @@ def get_dependencies(eco):
     return func_dict.get(eco)
 
 
-class FactoryClass(ABC):
+class TreeFactory(ABC):
     """Abstract class for Dependency Finder Ecosystem."""
+
     def __init__(self):
+        """Initialise class func."""
         self.df = DependencyFinder()
 
     @staticmethod
@@ -33,11 +35,11 @@ class FactoryClass(ABC):
 
     @staticmethod
     def get_transitives(data, transitive, suffix, trans):
-        """Factory func. for calculating transitives."""
+        """func. for calculating transitives."""
         pass
 
 
-class MavenTree(FactoryClass):
+class MavenTree(TreeFactory):
     """Generate Maven Dependency Tree."""
 
     def get_dependencies(self, manifests, show_transitive):
@@ -132,7 +134,7 @@ class MavenTree(FactoryClass):
         elif ncolons == 5:
             # groupId:artifactId:packaging:classifier:version:scope
             a['groupId'], a['artifactId'], a['packaging'], a['classifier'], a['version'], \
-            a['scope'] = coordinates_str.split(':')
+                a['scope'] = coordinates_str.split(':')
         else:
             raise ValueError('Invalid Maven coordinates %s', coordinates_str)
 
@@ -148,7 +150,7 @@ class DependencyFinder():
         if type(show_transitive) is not bool:
             show_transitive = show_transitive == "true"
         func = get_dependencies(ecosystem)
-        return func(manifests, show_transitive)
+        return func(ecosystem, manifests, show_transitive)
 
     @staticmethod
     def get_maven_dependencies(ecosystem, manifests, show_transitive):
@@ -315,7 +317,7 @@ class DependencyFinder():
         return transitive
 
     @staticmethod
-    def get_pypi_dependencies(ecosystem, manifests, show_transitives):      #noqa
+    def get_pypi_dependencies(ecosystem, manifests, show_transitives):      # noqa
         """Scan the pypi dependencies files to fetch transitive deps."""
         result = []
         details = []
