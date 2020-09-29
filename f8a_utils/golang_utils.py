@@ -34,7 +34,8 @@ class GolangUtils:
         self.latest_version = "-1"
         self.gh_link = None
         self.license = None
-        self.url = self.__populate_data(pkg)
+        self.module = []
+        self.__populate_data(pkg)
 
     def __fetch_all_versions(self, obj):
         """Fetch all the versions of a pkg."""
@@ -84,6 +85,20 @@ class GolangUtils:
             'a', None, 'href',
             obj.get_sub_data('p', {'class': 'Overview-sourceCodeLink'}))
 
+    def __fetch_module(self, obj, mod_val=None):
+        """Fetch the module of a pkg."""
+        module_lst = []
+        if not mod_val:
+            mod_val = obj.get_value('a', {'data-test-id': 'DetailsHeader-infoLabelModule'})
+        if mod_val:
+            module_lst.append(mod_val)
+            if "github" not in mod_val:
+                gh_link = self.get_gh_link()
+                if "https" in gh_link:
+                    module_lst.append(gh_link.split('https://')[1])
+        print(module_lst)
+        return module_lst
+
     def __populate_data(self, pkg):
         """Set the data for the golang pkg."""
         _logger.info("Populating the data object for {}".format(pkg))
@@ -96,16 +111,24 @@ class GolangUtils:
             scraper = Scraper(mod_url + "?tab=versions")
             self.version_list = self.__fetch_all_versions(scraper)
             if len(self.version_list) != 0:
+                self.url = mod_url
                 self.mode = "mod"
                 self.latest_version = self.__fetch_latest_version(scraper)
+                self.module = self.__fetch_module(scraper, pkg)
             else:
                 self.mode = "Not Found"
-            return mod_url
         else:
             _logger.info("Fetching the details from pkg.")
             self.mode = "pkg"
             self.latest_version = self.__fetch_latest_version(scraper)
-            return pkg_url
+            self.url = pkg_url
+            self.module = self.__fetch_module(scraper)
+
+    def get_module(self):
+        """Return module name of a pkg."""
+        if self.module == "Not Found":
+            return None
+        return self.module
 
     def get_all_versions(self):
         """Return all the versions of a pkg."""

@@ -12,11 +12,14 @@ def test_golang_utils_with_valid_pkg():
     assert go_obj.get_latest_version() is not None
     assert go_obj.get_gh_link() == "https://github.com/grafana/grafana"
     assert go_obj.get_license()[0] == "Apache-2.0"
+    assert go_obj.get_module()[0] == "github.com/grafana/grafana"
 
     go_obj = GolangUtils("k8s.io/kubelet")
     assert go_obj.mode == "mod"
     assert go_obj.get_license()[0] == "Apache-2.0"
     assert go_obj.get_gh_link() == "https://github.com/kubernetes/kubelet"
+    assert go_obj.get_module()[0] == "k8s.io/kubelet"
+    assert go_obj.get_module()[1] == "github.com/kubernetes/kubelet"
 
 
 def test_golang_utils_with_valid_pkg2():
@@ -40,6 +43,8 @@ def test_golang_utils_with_valid_pkg2():
 
     go_obj = GolangUtils("code.cloudfoundry.org/gorouter/proxy/handler")
     assert len(go_obj.get_license()) == 4
+    assert go_obj.get_module()[0] == "code.cloudfoundry.org/gorouter"
+    assert go_obj.get_module()[1] == "github.com/cloudfoundry/gorouter"
 
 
 def test_golang_utils_with_invalid_pkg():
