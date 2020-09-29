@@ -31,7 +31,6 @@ class GithubUtils:
 
     def __init__(self):
         """Init method for GithubUtils class."""
-
         self.GITHUB_TOKEN = environ.get('GITHUB_TOKEN', 'not-set').split(',')
         self.GITHUB_API = "https://api.github.com/"
 
@@ -154,9 +153,11 @@ class GithubUtils:
             return False
 
     def _is_commit_in_date_range(self, org, name, sha, date_range_rules):
-        """Returns True or False if the date of commit sha lies within the date range rules.
+        """Return True or False if the date of commit sha lies within the date range rules."""
+        """
         rules can be provided in the following format:
-        >#2020-09-17T13:19:13Z,>=#2020-09-17T13:19:13Z&<2020-09-20T13:19:13Z and so on."""
+        >#2020-09-17T13:19:13Z,>=#2020-09-17T13:19:13Z&<2020-09-20T13:19:13Z and so on.
+        """
         comm_date = self._get_date_from_commit_sha(org, name, sha)
         if not comm_date:
             comm_date = self._get_date_from_tag_sha(org, name, sha)
