@@ -6,6 +6,8 @@ from f8a_utils.dependency_finder import DependencyFinder
 from pathlib import Path
 import pytest
 
+from f8a_utils.tree_generator import GolangDependencyTreeGenerator
+
 
 def test_scan_and_find_dependencies_npm():
     """Test scan_and_find_dependencies function for NPM."""
@@ -92,7 +94,7 @@ def test_parse_go_string():
                  'given_version': 'v0.1.1',
                  'is_semver': True,
                  'version': '0.1.1'}
-    res = DependencyFinder().parse_go_string('github.com/hashicorp/consul/sdk@v0.1.1')
+    res = GolangDependencyTreeGenerator()._parse_string('github.com/hashicorp/consul/sdk@v0.1.1')
     assert res == ideal_res
 
 
