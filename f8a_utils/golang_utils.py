@@ -96,7 +96,6 @@ class GolangUtils:
                 gh_link = self.get_gh_link()
                 if "https" in gh_link:
                     module_lst.append(gh_link.split('https://')[1])
-        print(module_lst)
         return module_lst
 
     def __populate_data(self, pkg):
