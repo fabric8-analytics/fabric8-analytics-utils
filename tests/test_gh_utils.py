@@ -71,6 +71,16 @@ def test_get_date_from_semver():
     assert sv is None
 
 
+def test_get_commit_date():
+    """Test _get_commit_date."""
+    gh = GithubUtils()
+    dt = gh._get_commit_date("kubernetes", "kubernetes", "v1.19.1")
+    assert dt == "2020-09-09T11:17:20Z"
+
+    dt = gh._get_commit_date("kubernetes", "kubernetes", "0d4799964558b1e96587737613d6e79e1679cb82")
+    assert dt == "2020-09-17T13:19:13Z"
+
+
 @patch.dict(os.environ, {'GITHUB_TOKEN': 'some-junk-data'})
 def test_get_date_from_semver1():
     """Test _get_date_from_semver failure."""

@@ -31,7 +31,8 @@ class GithubUtils:
 
     def __init__(self):
         """Init method for GithubUtils class."""
-        self.GITHUB_TOKEN = environ.get('GITHUB_TOKEN', 'not-set').split(',')
+        self.GITHUB_TOKEN = environ.get('GITHUB_TOKEN',
+                                        '57f9975296a4b3ceaeb6989ab85f53dc675be541').split(',')
         self.GITHUB_API = "https://api.github.com/"
 
     def __select_gh_token(self):
@@ -127,6 +128,18 @@ class GithubUtils:
         dt = self._get_date_from_commit_sha(org, name, tag_sha)
         if not dt:
             dt = self._get_date_from_tag_sha(org, name, tag_sha)
+        return dt
+
+    def _get_commit_date(self, org, name, commit_data):
+        """Get the commit date details from the tag or hash."""
+        if len(commit_data) == 40:
+            # chances are that its a commit hash
+            dt = self._get_date_from_commit_sha(org, name, commit_data)
+            if not dt:
+                dt = self._get_date_from_tag_sha(org, name, commit_data)
+            if dt:
+                return dt
+        dt = self._get_date_from_semver(org, name, commit_data)
         return dt
 
     def __check_for_date_rule(self, comm_date, date_rule):
