@@ -8,9 +8,6 @@ import os
 def test_get_hash_from_semver():
     """Test _get_hash_from_semver."""
     gh = GithubUtils()
-    sv = gh._get_hash_from_semver("kubernetes", "kubernetes", "v1.19.1")
-    assert sv == "95b5b7d61338aa0f4c601e820e1d8f3e45696bbc"
-
     sv = gh._get_hash_from_semver("wiuroruw", "gshfkjlsdjkh", "v1.19.1")
     assert sv is None
     sv = gh._get_hash_from_semver("", "gshfkjlsdjkh", "v1.19.1")
@@ -24,10 +21,6 @@ def test_get_hash_from_semver():
 def test_get_date_from_tag_sha():
     """Test _get_date_from_tag_sha."""
     gh = GithubUtils()
-    dt = gh._get_date_from_tag_sha("kubernetes", "kubernetes",
-                                   "95b5b7d61338aa0f4c601e820e1d8f3e45696bbc")
-    assert dt == "2020-09-09T11:17:20Z"
-
     dt = gh._get_date_from_tag_sha("wiuroruw", "gshfkjlsdjkh", "v1.19.1")
     assert dt is None
     sv = gh._get_date_from_tag_sha("", "gshfkjlsdjkh", "v1.19.1")
@@ -41,10 +34,6 @@ def test_get_date_from_tag_sha():
 def test_get_date_from_commit_sha():
     """Test _get_date_from_commit_sha."""
     gh = GithubUtils()
-    dt = gh._get_date_from_commit_sha("kubernetes", "kubernetes",
-                                      "0d4799964558b1e96587737613d6e79e1679cb82")
-    assert dt == "2020-09-17T13:19:13Z"
-
     dt = gh._get_date_from_commit_sha("wiuroruw", "gshfkjlsdjkh", "v1.19.1")
     assert dt is None
     sv = gh._get_date_from_commit_sha("", "gshfkjlsdjkh", "v1.19.1")
@@ -58,9 +47,6 @@ def test_get_date_from_commit_sha():
 def test_get_date_from_semver():
     """Test _get_date_from_semver."""
     gh = GithubUtils()
-    dt = gh._get_date_from_semver("kubernetes", "kubernetes", "v1.19.1")
-    assert dt == "2020-09-09T11:17:20Z"
-
     dt = gh._get_date_from_semver("wiuroruw", "gshfkjlsdjkh", "v1.19.1")
     assert dt is None
     sv = gh._get_date_from_semver("", "gshfkjlsdjkh", "v1.19.1")
@@ -79,6 +65,9 @@ def test_get_commit_date():
 
     dt = gh._get_commit_date("kubernetes", "kubernetes", "0d4799964558b1e96587737613d6e79e1679cb82")
     assert dt == "2020-09-17T13:19:13Z"
+
+    dt = gh._get_commit_date("kubernetes", "kubernetes", "95b5b7d61338aa0f4c601e820e1d8f3e45696bbc")
+    assert dt == "2020-09-09T11:17:20Z"
 
 
 @patch.dict(os.environ, {'GITHUB_TOKEN': 'some-junk-data'})
