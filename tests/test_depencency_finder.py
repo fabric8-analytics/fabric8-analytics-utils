@@ -66,23 +66,25 @@ class TestDependencyFinder(unittest.TestCase):
 
     def test_scan_and_find_dependencies_golang_empty_input(self):
         """Test scan_and_find_dependencies function for golang Empty."""
+        file = open(str(Path(__file__).parent / "data/gograph_empty.txt"))
         manifests = [{
             "filename": "gograph.txt",
             "filepath": "/bin/local",
-            "content": open(str(Path(__file__).parent / "data/gograph_empty.txt")).read()
+            "content": file.read()
         }]
+        file.close()
         res = DependencyFinder().scan_and_find_dependencies
         self.assertRaises(ValueError, res, "golang", manifests, True)
 
     def test_scan_and_find_dependencies_golang_only_direct(self):
         """Test scan_and_find_dependencies function for golang Only Direct Deps."""
-        content = open(str(Path(__file__).parent / "data/gograph_only_direct.txt")).read()
+        file = open(str(Path(__file__).parent / "data/gograph_only_direct.txt"))
         manifests = [{
             "filename": "gograph.txt",
             "filepath": "/bin/local",
-            "content": content
+            "content": file.read()
         }]
-        # manifests[0]['content'].close()
+        file.close()
         with open(str(Path(__file__).parent / "data/golist_response_only_direct.json")) as fp:
             ideal_response = json.load(fp)
         res = DependencyFinder().scan_and_find_dependencies("golang", manifests, True)
