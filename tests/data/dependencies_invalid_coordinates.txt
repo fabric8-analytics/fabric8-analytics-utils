@@ -1,6 +1,6 @@
 digraph "io.openshift.booster:booster-mission-runtime:jar:1.0.0" {
 	"io.openshift.booster:foo:jar:1.0.0" -> "io.vertx:vertx-core:first:second:third:fourth:fifth" ;
-	"io.openshift.booster:booster-mission-runtime:jar:1.0.0" -> "io.vertx:vertx-core:jar:3.5.4.redhat-00002:compile" ;
+	"io.openshift.booster:booster-mission-runtime:jar:1.0.0" -> "io.vertxvertx-corejar3.5.4.redhat-00002compile" ;
 	"io.openshift.booster:booster-mission-runtime:jar:1.0.0" -> "io.vertx:vertx-web:jar:3.5.4.redhat-00002:compile" ;
 	"io.openshift.booster:booster-mission-runtime:jar:1.0.0" -> "io.vertx:vertx-health-check:jar:3.5.4.redhat-00002:compile" ;
 	"io.openshift.booster:booster-mission-runtime:jar:1.0.0" -> "io.vertx:vertx-web-client:jar:3.5.4.redhat-00002:compile" ;

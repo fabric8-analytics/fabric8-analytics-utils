@@ -2,7 +2,7 @@
 
 import json
 from abc import ABC
-
+from collections import defaultdict
 import semver
 
 
@@ -23,12 +23,11 @@ class DependencyTreeGenerator(ABC):
 class MavenDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Maven Dependency Tree."""
 
-    def get_dependencies(self, manifests, show_transitive):
-        """Scan the maven dependencies files to fetch transitive deps."""
+    def get_dependencies(self, manifests: list, show_transitive: bool) -> dict:
+        """Scan the maven dependencies files and fetch transitive deps."""
         deps = {}
         result = []
         details = []
-        direct = []
         for manifest in manifests:
             dep = {
                 "ecosystem": "maven",
@@ -41,27 +40,19 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
             if isinstance(data, bytes):
                 data = data.decode("utf-8")
 
-            module = ''
-            for line in data.split("\n"):
-                if "->" in line:
-                    line = line.replace('"', '')
-                    line = line.replace(' ;', '')
-                    prefix, suffix = line.strip().split(" -> ")
-                    parsed_json = self._parse_string(suffix)
-                    if prefix == module and suffix not in direct and parsed_json['scope'] != 'test':
-                        transitive = []
-                        trans = []
-                        direct.append(suffix)
-                        if show_transitive is True:
-                            transitive = self._get_transitives(data, transitive, suffix, trans)
-                        tmp_json = {
-                            "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
-                            "version": parsed_json['version'],
-                            "deps": transitive
-                        }
-                        resolved.append(tmp_json)
-                else:
-                    module = line[line.find('"') + 1:line.rfind('"')]
+            tree = self._get_tree(data)
+            for direct, transitives in tree.items():
+                # Add meta data to generated tree.
+                parsed_json = self._parse_string(direct)
+                trans_list = []
+                if show_transitive:
+                    trans_list = self._get_transitives(transitives)
+                tmp_json = {
+                    "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
+                    "version": parsed_json['version'],
+                    "deps": trans_list
+                }
+                resolved.append(tmp_json)
             dep['_resolved'] = resolved
             details.append(dep)
             details_json = {"details": details}
@@ -70,23 +61,48 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
         deps['result'] = result
         return deps
 
-    def _get_transitives(self, data, transitive, suffix, trans):
-        """Scan the maven dependencies files to fetch transitive deps."""
-        for line in data.split("\n"):
-            if suffix in line:
-                line = line.replace('"', '')
-                line = line.replace(' ;', '')
-                pref, suff = line.strip().split(" -> ")
-                parsed_json = self._parse_string(suff)
-                if pref == suffix and suff not in trans and parsed_json['scope'] != 'test':
-                    trans.append(suff)
-                    tmp_json = {
-                        "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
-                        "version": parsed_json['version']
-                    }
-                    transitive.append(tmp_json)
-                    transitive = self._get_transitives(data, transitive, suff, trans)
-        return transitive
+    def _get_transitives(self, transitives: list) -> list:
+        """Scan the maven transitives."""
+        trans_list = []
+        for transitive in transitives:
+            parsed_json = self._parse_string(transitive)
+            tmp_json = {
+                "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
+                "version": parsed_json['version']
+            }
+            trans_list.append(tmp_json)
+        return trans_list
+
+    def _get_tree(self, content: str) -> dict:
+        """Build Dependency Tree.
+
+        :param content: file contents from dependency.txt
+        :return: Tree in format ({d1:[t1, t2]})
+        """
+        final_map = {}
+        intermediate_map = defaultdict(list)
+        module = ''
+        for line in content.split("\n"):
+            if '->' in line:
+                prefix, suffix = line.split('->')
+                prefix = prefix.replace('"', '').replace(';', '').strip()
+                suffix = suffix.replace('"', '').replace(';', '').strip()
+
+                prefix, suffix = prefix, suffix.strip('\n')
+                if prefix == module:
+                    final_map[suffix] = []
+                else:
+                    intermediate_map[prefix].append(suffix)
+            else:
+                module = line[line.find('"') + 1:line.rfind('"')]
+
+        for key in final_map.keys():
+            values = intermediate_map[key]
+            while len(values) != 0:
+                next_key = values.pop()
+                final_map[key].append(next_key)
+                values.extend(intermediate_map[next_key])
+        return final_map
 
     @staticmethod
     def _parse_string(coordinates_str):
@@ -277,7 +293,7 @@ class GolangDependencyTreeGenerator(DependencyTreeGenerator):
         return a
 
     @staticmethod
-    def _clean_dependencies(dependencies: str) -> list:
+    def _clean_dependencies(dependencies) -> list:
         """Clean Golang Dep."""
         if isinstance(dependencies, bytes):
             dependencies = dependencies.decode("utf-8")
