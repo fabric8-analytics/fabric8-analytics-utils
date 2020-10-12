@@ -175,8 +175,8 @@ class GithubUtils:
         else:
             return False
 
-    def _is_commit_in_date_range(self, org, name, sha, date_range_rules):
-        """Return True or False if the date of commit sha lies within the date range rules."""
+    def _is_commit_in_vuln_range(self, org, name, sha, date_range_rules):
+        """Return True or False if the date of commit sha lies within the vuln date range rules."""
         """
         rules can be provided in the following format:
         >#2020-09-17T13:19:13Z,>=#2020-09-17T13:19:13Z&<2020-09-20T13:19:13Z and so on.
