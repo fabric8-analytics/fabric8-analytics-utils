@@ -221,4 +221,3 @@ class GithubUtils:
             return False
         else:
             return self.__check_for_date_rule(comm_date, date_range_rules)
-
