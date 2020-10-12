@@ -199,3 +199,26 @@ class GithubUtils:
             return False
         else:
             return self.__check_for_date_rule(comm_date, date_range_rules)
+
+    def _is_commit_date_in_vuln_range(self, date_string, date_range_rules):
+        """Return True or False if the date of commit sha lies within the date range rules."""
+        """
+        rules can be provided in the following format:
+        >#2020-09-17T13:19:13Z,>=#2020-09-17T13:19:13Z&<2020-09-20T13:19:13Z and so on.
+        date in yyyymmddhhmmss format.
+        """
+        try:
+            comm_date = datetime.strptime(date_string, '%Y%m%d%H%M%S')
+        except ValueError:
+            _logger.error("Date format is wrong. Follow yyyymmddhhmmss format")
+            return None
+        if ',' in date_range_rules:
+            rules = date_range_rules.split(',')
+            for rule in rules:
+                val = self.__check_for_date_rule(comm_date, rule)
+                if val:
+                    return True
+            return False
+        else:
+            return self.__check_for_date_rule(comm_date, date_range_rules)
+

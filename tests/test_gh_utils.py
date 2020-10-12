@@ -93,3 +93,18 @@ def test_is_commit_in_date_range():
     res = gh._is_commit_in_date_range("kubernetes", "kubernetes",
                                       "0d4799964558", "*")
     assert res is True
+
+
+def test_is_commit_date_in_vuln_range():
+    """Test _is_commit_date_in_vuln_range."""
+    gh = GithubUtils()
+    res = gh._is_commit_date_in_vuln_range("", "")
+    assert res is None
+
+    res = gh._is_commit_date_in_vuln_range("20200916101010",
+                                           ">#2020-09-15T13:19:13Z&<=#2020-09-16T13:19:13Z,"
+                                           ">=#2020-09-16T13:19:13Z&<#2020-09-17T13:19:13Z,"
+                                           "=#2020-09-17T13:19:13Z")
+    assert res is True
+    res = gh._is_commit_date_in_vuln_range("0d4799964558", "*")
+    assert res is None
