@@ -44,6 +44,9 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
             for direct, transitives in tree.items():
                 # Add meta data to generated tree.
                 parsed_json = self._parse_string(direct)
+                if parsed_json['scope'] == 'test':
+                    # Don't process Test Dependencies.
+                    continue
                 trans_list = []
                 if show_transitive:
                     trans_list = self._parse_transitives(transitives)

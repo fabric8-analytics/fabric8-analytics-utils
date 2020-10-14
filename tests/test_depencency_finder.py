@@ -214,7 +214,29 @@ def test_scan_and_find_dependencies_maven_ignore_test_deps():
     assert "result" in res
 
     # There are total 9 packages, but 4 are mandatory packages.
-    assert 9 == len(res['result'][0]['details'][0]['_resolved'])
+    assert 4 == len(res['result'][0]['details'][0]['_resolved'])
+
+    # Packages expected are
+    mandatory_packages = [
+        'io.vertx:vertx-core',
+        'io.vertx:vertx-web',
+        'io.vertx:vertx-health-check',
+        'io.vertx:vertx-web-client'
+    ]
+
+    # Packages not expected are
+    test_packages = [
+        'io.vertx:vertx-unit',
+        'junit:junit',
+        'org.assertj:assertj-core',
+        'io.rest-assured:rest-assured',
+        'org.arquillian.cube:arquillian-cube-openshift-starter'
+    ]
+
+    # Check that only non-test packages are present.
+    for package in res['result'][0]['details'][0]['_resolved']:
+        assert package['package'] in mandatory_packages
+        assert package['package'] not in test_packages
 
 
 if __name__ == '__main__':
