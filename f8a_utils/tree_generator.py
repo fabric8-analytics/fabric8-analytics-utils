@@ -84,8 +84,11 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
         module = ''
         for line in content.split("\n"):
             if '->' in line:
-                line = line.replace('"', '').replace(';', '').strip()
+                # line = line.replace('"', '').replace(';', '').strip()
                 prefix, suffix = line.split('->')
+                prefix = prefix.replace('"', '').replace(';', '').strip()
+                suffix = suffix.replace('"', '').replace(';', '').strip()
+
                 prefix, suffix = prefix, suffix.strip('\n')
                 if prefix == module:
                     final_map[suffix] = []
