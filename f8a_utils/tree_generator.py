@@ -10,7 +10,7 @@ class DependencyTreeGenerator(ABC):
     """Abstract class for Dependency Finderq."""
 
     @staticmethod
-    def get_dependency_tree(manifests, show_transitive):
+    def get_dependencies(manifests, show_transitive):
         """Make Ecosystem Tree."""
         pass
 
@@ -23,7 +23,7 @@ class DependencyTreeGenerator(ABC):
 class MavenDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Maven Dependency Tree."""
 
-    def get_dependency_tree(self, manifests: list, show_transitive: bool) -> dict:
+    def get_dependencies(self, manifests: list, show_transitive: bool) -> dict:
         """Scan the maven dependencies files and fetch transitive deps."""
         deps = {}
         result = []
@@ -40,7 +40,7 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
             if isinstance(data, bytes):
                 data = data.decode("utf-8")
 
-            tree = self._get_tree(data)
+            tree = self._get_dependency_tree(data)
             for direct, transitives in tree.items():
                 # Add meta data to generated tree.
                 parsed_json = self._parse_string(direct)
@@ -76,7 +76,7 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
             trans_list.append(tmp_json)
         return trans_list
 
-    def _get_tree(self, content: str) -> dict:
+    def _get_dependency_tree(self, content: str) -> dict:
         """Build Dependency Tree.
 
         :param content: file contents from dependency.txt
@@ -142,7 +142,7 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
 class NpmDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate NPM Dependency Tree."""
 
-    def get_dependency_tree(self, manifests, show_transitive):
+    def get_dependencies(self, manifests, show_transitive):
         """Scan the npm dependencies files to fetch transitive deps."""
         deps = {}
         result = []
@@ -204,7 +204,7 @@ class NpmDependencyTreeGenerator(DependencyTreeGenerator):
 class PypiDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Pypi Dependency Tree."""
 
-    def get_dependency_tree(self, manifests, show_transitive):
+    def get_dependencies(self, manifests, show_transitive):
         """Scan the Pypi dependencies files to fetch transitive deps."""
         result = []
         details = []
@@ -231,7 +231,7 @@ class PypiDependencyTreeGenerator(DependencyTreeGenerator):
 class GolangDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Golang Dependency Tree."""
 
-    def get_dependency_tree(self, manifests, show_transitive):
+    def get_dependencies(self, manifests, show_transitive):
         """Check Go Lang Dependencies."""
         details = []
         final = {}
