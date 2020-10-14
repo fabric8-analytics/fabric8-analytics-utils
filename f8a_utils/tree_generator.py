@@ -10,7 +10,7 @@ class DependencyTreeGenerator(ABC):
     """Abstract class for Dependency Finderq."""
 
     @staticmethod
-    def get_dependencies(manifests, show_transitive):
+    def get_dependency_tree(manifests, show_transitive):
         """Make Ecosystem Tree."""
         pass
 
@@ -23,7 +23,7 @@ class DependencyTreeGenerator(ABC):
 class MavenDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Maven Dependency Tree."""
 
-    def get_dependencies(self, manifests: list, show_transitive: bool) -> dict:
+    def get_dependency_tree(self, manifests: list, show_transitive: bool) -> dict:
         """Scan the maven dependencies files and fetch transitive deps."""
         deps = {}
         result = []
@@ -142,7 +142,7 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
 class NpmDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate NPM Dependency Tree."""
 
-    def get_dependencies(self, manifests, show_transitive):
+    def get_dependency_tree(self, manifests, show_transitive):
         """Scan the npm dependencies files to fetch transitive deps."""
         deps = {}
         result = []
@@ -204,7 +204,7 @@ class NpmDependencyTreeGenerator(DependencyTreeGenerator):
 class PypiDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Pypi Dependency Tree."""
 
-    def get_dependencies(self, manifests, show_transitive):
+    def get_dependency_tree(self, manifests, show_transitive):
         """Scan the Pypi dependencies files to fetch transitive deps."""
         result = []
         details = []
@@ -231,7 +231,7 @@ class PypiDependencyTreeGenerator(DependencyTreeGenerator):
 class GolangDependencyTreeGenerator(DependencyTreeGenerator):
     """Generate Golang Dependency Tree."""
 
-    def get_dependencies(self, manifests, show_transitive):
+    def get_dependency_tree(self, manifests, show_transitive):
         """Check Go Lang Dependencies."""
         details = []
         final = {}

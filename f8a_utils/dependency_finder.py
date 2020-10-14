@@ -7,7 +7,7 @@ from f8a_utils.tree_generator import \
     GolangDependencyTreeGenerator as GoTree
 
 
-def get_tree(eco):
+def get_dependency_tree_generator(eco):
     """Get Dependency Tree class.
 
     :param eco: Ecosystem
@@ -31,8 +31,8 @@ class DependencyFinder():
         """Scan the dependencies files to fetch transitive deps."""
         if type(show_transitive) is not bool:
             show_transitive = show_transitive == "true"
-        dependency_tree = get_tree(ecosystem)()
-        return dependency_tree.get_dependencies(manifests, show_transitive)
+        dependency_tree_generator = get_dependency_tree_generator(ecosystem)()
+        return dependency_tree_generator.get_dependency_tree(manifests, show_transitive)
 
     @staticmethod
     def clean_version(version):
