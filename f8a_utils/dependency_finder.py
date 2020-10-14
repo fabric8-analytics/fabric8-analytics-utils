@@ -32,7 +32,7 @@ class DependencyFinder():
         if type(show_transitive) is not bool:
             show_transitive = show_transitive == "true"
         dependency_tree_generator = get_dependency_tree_generator(ecosystem)()
-        return dependency_tree_generator.get_dependency_tree(manifests, show_transitive)
+        return dependency_tree_generator.get_dependencies(manifests, show_transitive)
 
     @staticmethod
     def clean_version(version):
