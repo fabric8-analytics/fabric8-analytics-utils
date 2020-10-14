@@ -31,8 +31,8 @@ class DependencyFinder():
         """Scan the dependencies files to fetch transitive deps."""
         if type(show_transitive) is not bool:
             show_transitive = show_transitive == "true"
-        get_dependency_tree = get_tree(ecosystem)()
-        return get_dependency_tree.get_dependencies(manifests, show_transitive)
+        dependency_tree = get_tree(ecosystem)()
+        return dependency_tree.get_dependencies(manifests, show_transitive)
 
     @staticmethod
     def clean_version(version):

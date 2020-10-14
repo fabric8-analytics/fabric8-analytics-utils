@@ -15,7 +15,7 @@ class DependencyTreeGenerator(ABC):
         pass
 
     @staticmethod
-    def _get_transitives(*args):                # noqa
+    def _parse_transitives(*args):                # noqa
         """func. for calculating transitives."""
         pass
 
@@ -46,7 +46,7 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
                 parsed_json = self._parse_string(direct)
                 trans_list = []
                 if show_transitive:
-                    trans_list = self._get_transitives(transitives)
+                    trans_list = self._parse_transitives(transitives)
                 tmp_json = {
                     "package": parsed_json['groupId'] + ":" + parsed_json['artifactId'],
                     "version": parsed_json['version'],
@@ -61,7 +61,7 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
         deps['result'] = result
         return deps
 
-    def _get_transitives(self, transitives: list) -> list:
+    def _parse_transitives(self, transitives: list) -> list:
         """Scan the maven transitives."""
         trans_list = []
         for transitive in transitives:
@@ -84,10 +84,8 @@ class MavenDependencyTreeGenerator(DependencyTreeGenerator):
         module = ''
         for line in content.split("\n"):
             if '->' in line:
+                line = line.replace('"', '').replace(';', '').strip()
                 prefix, suffix = line.split('->')
-                prefix = prefix.replace('"', '').replace(';', '').strip()
-                suffix = suffix.replace('"', '').replace(';', '').strip()
-
                 prefix, suffix = prefix, suffix.strip('\n')
                 if prefix == module:
                     final_map[suffix] = []
@@ -166,7 +164,7 @@ class NpmDependencyTreeGenerator(DependencyTreeGenerator):
                             tr_deps = val.get('dependencies') or \
                                       val.get('required', {}).get('dependencies')
                             if tr_deps:
-                                transitive = self._get_transitives(transitive, tr_deps)
+                                transitive = self._parse_transitives(transitive, tr_deps)
                         tmp_json = {
                             "package": key,
                             "version": version,
@@ -180,7 +178,7 @@ class NpmDependencyTreeGenerator(DependencyTreeGenerator):
         deps['result'] = result
         return deps
 
-    def _get_transitives(self, transitive, content):
+    def _parse_transitives(self, transitive, content):
         """Scan the npm dependencies recursively to fetch transitive deps."""
         if content:
             for key, val in content.items():
@@ -193,7 +191,7 @@ class NpmDependencyTreeGenerator(DependencyTreeGenerator):
                     transitive.append(tmp_json)
                     tr_deps = val.get('dependencies') or val.get('required', {}).get('dependencies')
                     if tr_deps:
-                        transitive = self._get_transitives(transitive, tr_deps)
+                        transitive = self._parse_transitives(transitive, tr_deps)
         return transitive
 
 
@@ -250,7 +248,7 @@ class GolangDependencyTreeGenerator(DependencyTreeGenerator):
                     transitive_list = []
                     trans = []
                     if show_transitive:
-                        transitive_list = self._get_transitives(
+                        transitive_list = self._parse_transitives(
                             dependencies, transitive_list, direct_dep, trans)
                     parsed_json["deps"] = transitive_list
                     resolved.append(parsed_json)
@@ -260,7 +258,7 @@ class GolangDependencyTreeGenerator(DependencyTreeGenerator):
         final["result"] = result
         return final
 
-    def _get_transitives(self, data, transitive, suffix, trans):
+    def _parse_transitives(self, data, transitive, suffix, trans):
         """Scan the golang transitive deps."""
         for line in data:
             pref, suff = line.strip().split(" ")
@@ -268,7 +266,7 @@ class GolangDependencyTreeGenerator(DependencyTreeGenerator):
                 trans.append(suff)
                 parsed_json = self._parse_string(suff)
                 transitive.append(parsed_json)
-                transitive = self._get_transitives(data, transitive, suff, trans)
+                transitive = self._parse_transitives(data, transitive, suff, trans)
         return transitive
 
     def _parse_string(self, deps_string):
