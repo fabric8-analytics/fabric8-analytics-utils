@@ -25,7 +25,7 @@ radon mi -s -i venv .
 
 popd
 
-if [[ "$1" == "--fail-on-error" ]]
+if [ true ]
 then
     defects="$(radon mi -s -n B -i venv . | wc -l)"
     if [[ $defects -gt 0 ]]
