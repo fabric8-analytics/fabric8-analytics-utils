@@ -24,13 +24,10 @@ function prepare_venv() {
 radon mi -s -i venv .
 
 popd
-
-if [ true ]
-then
-    defects="$(radon mi -s -n B -i venv . | wc -l)"
-    if [[ $defects -gt 0 ]]
-    then
-        echo "File(s) with too low maintainability index detected!"
-        exit 1
-    fi
+defects="$(radon mi -s -n B -i venv . | wc -l)"
+if [[ $defects -gt 0 ]]; then
+    echo "File(s) with too low maintainability index detected!"
+    exit 1
+else
+    echo "Finished Successfully..!"
 fi
