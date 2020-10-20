@@ -1,5 +1,5 @@
 
-name: CRDA CI Build
+name: CI
 
 on:
   pull_request:
@@ -10,7 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        scripts: ["run-linter", "check-docstyle", "detect-dead-code", "detect-common-errors"]
+        scripts:
+          - run-linter
+          - check-docstyle
+          - detect-dead-code
+          - detect-common-errors
+          - measure-cyclomatic-complexity
+          - measure-maintainability-index    
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.6
@@ -19,19 +25,6 @@ jobs:
         python-version: '3.6'
     - name: ${{ matrix.scripts }}
       run: bash qa/${{ matrix.scripts }}.sh;
-  CC-and-MI:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: 
-        scripts: ["measure-cyclomatic-complexity","measure-maintainability-index"]
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.6'
-    - name: Run  ${{ matrix.scripts }}
-      run: bash qa/${{ matrix.scripts }}.sh --fail-on-error
   Run-Tests:
     runs-on: ubuntu-latest
     steps:
@@ -41,8 +34,14 @@ jobs:
       with:
         python-version: '3.6'
     - name: Run Unit Tests
-      run:  bash qa/actions-run-tests.sh
-    - name: Upload Code coverage
-      uses: codecov/codecov-action@v1 
+      run: |
+        pip install -U pip
+        pip install virtualenv
+        virtualenv -p python3 venv && source venv/bin/activate
+        pip install -r tests/requirements.txt
+        PYTHONPATH=`pwd` python3 "$(which pytest)" --cov=f8a_utils/ --cov-report=xml --cov-fail-under=95 -vv tests/
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
       with:
-          file: coverage.xml # optional
+        token: b3420bb6-159c-49d3-8bd2-9cf2727069e8 
+        file: ./coverage.xml
