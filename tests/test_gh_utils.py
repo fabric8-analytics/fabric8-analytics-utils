@@ -106,5 +106,12 @@ def test_is_commit_date_in_vuln_range():
                                            ">=#2020-09-16T13:19:13Z&<#2020-09-17T13:19:13Z,"
                                            "=#2020-09-17T13:19:13Z")
     assert res is True
+
+    res = gh._is_commit_date_in_vuln_range("20190916101010",
+                                           ">#2020-09-15T13:19:13Z&<=#2020-09-16T13:19:13Z,"
+                                           ">=#2020-09-16T13:19:13Z&<#2020-09-17T13:19:13Z,"
+                                           "=#2020-09-17T13:19:13Z")
+    assert res is False
+
     res = gh._is_commit_date_in_vuln_range("0d4799964558", "*")
     assert res is None

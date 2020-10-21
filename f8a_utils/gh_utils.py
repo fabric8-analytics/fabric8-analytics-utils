@@ -61,9 +61,6 @@ class GithubUtils:
             }
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
-            _logger.error(
-                'Unable to fetch details for package {u}'.format(u=url)
-            )
             _logger.error("Error Code: {}".format(response.status_code))
             return None
         return response.json()
