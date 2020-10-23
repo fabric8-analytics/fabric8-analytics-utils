@@ -23,6 +23,8 @@ import requests
 from os import environ
 from datetime import datetime
 import base64
+from requests.exceptions import ConnectionError
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -51,7 +53,7 @@ class GithubUtils:
         _logger.info("Could not select a gh token.")
         return None
 
-    def __make_get_call(self, url):
+    def __make_get_call(self, url, iter=0):
         """Make an api call and return results."""
         token = self.__select_gh_token()
         headers = None
@@ -59,9 +61,21 @@ class GithubUtils:
             headers = {
                 'Authorization': 'token {t}'.format(t=token)
             }
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            _logger.error("Error Code: {}".format(response.status_code))
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code != 200:
+                _logger.error("Error Code: {}".format(response.status_code))
+                return None
+        except ConnectionError as e:
+            _logger.error("Exception while trying to make an API call {}".format(e))
+            iter += 1
+            time.sleep(iter)
+            if iter <= 3:
+                return self.__make_get_call(url, iter)
+            else:
+                return None
+        except Exception as e:
+            _logger.error("Exception while trying to make an API call {}".format(e))
             return None
         return response.json()
 
