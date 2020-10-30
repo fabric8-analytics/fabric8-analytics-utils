@@ -79,6 +79,31 @@ class GithubUtils:
             return None
         return response.json()
 
+    def _get_verion_list(self, org, name):
+        """Return a the list of release versions."""
+        ver_list = []
+        try:
+            assert org
+            assert name
+        except AssertionError as e:
+            _logger.error("Input data is not valid. {}".format(e))
+            return None
+        url = self.GITHUB_API + "repos/{o}/{n}/git/refs/tags".format(
+            o=org, n=name)
+
+        data = self.__make_get_call(url)
+        if not data or len(data) == 0:
+            _logger.info("No tags found for the url {}".format(url))
+            return None
+        for tag in data:
+            url = tag['url']
+            if url and 'tags/' in url:
+                ver = url.split('tags/')[1]
+                if ver.startswith('v'):
+                    ver = ver.split('v')[1]
+                ver_list.append(ver)
+        return ver_list
+
     def _get_hash_from_semver(self, org, name, version):
         """Return the commit hash from the semver."""
         try:

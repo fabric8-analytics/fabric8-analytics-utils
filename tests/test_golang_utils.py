@@ -32,12 +32,12 @@ def test_golang_utils_with_valid_pkg2():
     assert go_obj.get_gh_link() == "https://github.com/containous/traefik"
 
     go_obj = GolangUtils("github.com/ryanuber/columnize")
-    assert go_obj.mode == "pkg"
+    assert go_obj.mode == "mod"
     assert go_obj.get_gh_link() == "https://github.com/ryanuber/columnize"
     assert go_obj.get_license()[0] == "MIT"
 
     go_obj = GolangUtils("github.com/qor/admin")
-    assert go_obj.mode == "pkg"
+    assert go_obj.mode == "mod"
     assert go_obj.get_gh_link() == "https://github.com/qor/admin"
     assert str(go_obj.get_license()[0]) == "not legal advice"
 

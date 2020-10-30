@@ -19,6 +19,8 @@
 
 from f8a_utils.web_scraper import Scraper
 import logging
+from f8a_utils.gh_utils import GithubUtils
+from f8a_version_comparator.comparable_version import ComparableVersion
 
 
 _logger = logging.getLogger(__name__)
@@ -35,15 +37,19 @@ class GolangUtils:
         self.gh_link = None
         self.license = None
         self.module = []
+        self.gh = GithubUtils()
         self.__populate_data(pkg)
 
     def __fetch_all_versions(self, obj):
         """Fetch all the versions of a pkg."""
+        tabs_exist = obj.get_value_from_list('div', 'a', {'role': 'tablist'})
         ver_list = obj.get_value_from_list('li', 'a', {'class': 'Versions-item'})
+        final_list = []
         if len(ver_list) != 0:
-            final_list = []
             for ver in ver_list:
-                if "+incompatible" in ver:
+                if ver.startswith('v0.0.0-'):
+                    continue
+                elif "+incompatible" in ver:
                     intermediate_value = ver.split('+incompatible')[0]
                     if "v" in intermediate_value:
                         version = intermediate_value.split('v')[1]
@@ -51,27 +57,48 @@ class GolangUtils:
                         version = intermediate_value
                     final_list.append(version)
                 else:
-                    if "v" in ver:
+                    if ver.startswith('v'):
                         version = ver.split('v')[1]
                     else:
                         version = ver
                     final_list.append(version)
-            return final_list
+        # The tab exist logic is added because in some cases, you wont find any versions under tab.
+        if ver_list or tabs_exist:
+            org_name = self.get_gh_link().split("https://github.com/")[1].split("/")
+            all_ver = self.gh._get_verion_list(org_name[0], org_name[1])
+            if final_list:
+                all_ver.extend(final_list)
+            if all_ver:
+                return list(set(all_ver))
         return ver_list
+
+    def __select_latest_version(self, versions=[]):
+        """Select latest version from list."""
+        if len(versions) == 0:
+            return ""
+        version_arr = []
+        for x in versions:
+            version_arr.append(ComparableVersion(x))
+        version_arr.sort()
+        return str(version_arr[-1])
 
     def __fetch_latest_version(self, obj):
         """Fetch the latest version of a pkg."""
-        latest_ver = obj.get_value('div', {'class': 'DetailsHeader-version'})
-        if "+incompatible" in latest_ver:
-            intermediate_value = latest_ver.split('+incompatible')[0]
-            if "v" in intermediate_value:
-                latest_ver = intermediate_value.split('v')[1]
-            else:
-                latest_ver = intermediate_value
+        all_ver = self.get_all_versions()
+        if all_ver:
+            return self.__select_latest_version(all_ver)
         else:
-            if "v" in latest_ver:
-                latest_ver = latest_ver.split('v')[1]
-        return latest_ver
+            latest_ver = obj.get_value('div', {'class': 'DetailsHeader-version'})
+            if "+incompatible" in latest_ver:
+                intermediate_value = latest_ver.split('+incompatible')[0]
+                if "v" in intermediate_value:
+                    latest_ver = intermediate_value.split('v')[1]
+                else:
+                    latest_ver = intermediate_value
+            else:
+                if "v" in latest_ver:
+                    latest_ver = latest_ver.split('v')[1]
+            return latest_ver
 
     def __fetch_license(self, obj):
         """Fetch the github link of a pkg."""
@@ -103,25 +130,25 @@ class GolangUtils:
         _logger.info("Populating the data object for {}".format(pkg))
         pkg_url = "https://pkg.go.dev/{}".format(pkg)
         mod_url = "https://pkg.go.dev/mod/{}".format(pkg)
-        scraper = Scraper(pkg_url + "?tab=versions")
+        scraper = Scraper(mod_url + "?tab=versions")
+        self.mode = "mod"
+        self.url = mod_url
         self.version_list = self.__fetch_all_versions(scraper)
         if len(self.version_list) == 0:
-            _logger.info("Fetching the details from mod.")
-            scraper = Scraper(mod_url + "?tab=versions")
+            _logger.info("Fetching the details from pkg.")
+            scraper = Scraper(pkg_url + "?tab=versions")
+            self.mode = "pkg"
+            self.url = pkg_url
             self.version_list = self.__fetch_all_versions(scraper)
             if len(self.version_list) != 0:
-                self.url = mod_url
-                self.mode = "mod"
                 self.latest_version = self.__fetch_latest_version(scraper)
-                self.module = self.__fetch_module(scraper, pkg)
+                self.module = self.__fetch_module(scraper)
             else:
                 self.mode = "Not Found"
         else:
-            _logger.info("Fetching the details from pkg.")
-            self.mode = "pkg"
+            _logger.info("Fetching the details from mod.")
             self.latest_version = self.__fetch_latest_version(scraper)
-            self.url = pkg_url
-            self.module = self.__fetch_module(scraper)
+            self.module = self.__fetch_module(scraper, pkg)
 
     def get_module(self):
         """Return module name of a pkg."""
