@@ -16,6 +16,7 @@ def test_golang_utils_with_valid_pkg():
 
     go_obj = GolangUtils("k8s.io/kubelet")
     assert go_obj.mode == "mod"
+    go_obj.license = None
     assert go_obj.get_license()[0] == "Apache-2.0"
     assert go_obj.get_gh_link() == "https://github.com/kubernetes/kubelet"
     assert go_obj.get_module()[0] == "k8s.io/kubelet"

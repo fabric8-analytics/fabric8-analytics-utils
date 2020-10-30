@@ -5,6 +5,16 @@ from unittest.mock import patch
 import os
 
 
+def test_get_verion_list():
+    """Test _get_verion_list."""
+    gh = GithubUtils()
+    ver = gh._get_verion_list("", "")
+    assert ver is None
+
+    ver = gh._get_verion_list("qor", "admin")
+    assert "1.0" in ver
+
+
 def test_get_hash_from_semver():
     """Test _get_hash_from_semver."""
     gh = GithubUtils()
@@ -93,6 +103,20 @@ def test_is_commit_in_date_range():
     res = gh._is_commit_in_vuln_range("kubernetes", "kubernetes",
                                       "0d4799964558", "*")
     assert res is True
+
+    res = gh._is_commit_in_vuln_range("kubernetes", "kubernetes",
+                                      "0d4799964558", "$%#2020-09-17T13:19:13Z")
+    assert res is False
+
+    res = gh._is_commit_in_vuln_range("kubernetes", "kubernetes",
+                                      "0d4799964558",
+                                      "$#2020-09-17T13:19:13Z,%#2020-09-17T13:19:13Z")
+    assert res is False
+
+    gh.GITHUB_API = "http://www.gibberish_my_data.com/"
+    res = gh._is_commit_in_vuln_range("kubernetes", "kubernetes",
+                                      "0d4799964558", "*")
+    assert res is None
 
 
 def test_is_commit_date_in_vuln_range():
