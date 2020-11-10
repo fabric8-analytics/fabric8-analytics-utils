@@ -139,3 +139,53 @@ def test_is_commit_date_in_vuln_range():
 
     res = gh._is_commit_date_in_vuln_range("0d4799964558", "*")
     assert res is None
+
+
+def test_is_pseudo_version():
+    """Test _is_pseudo_version."""
+    test_data = {
+        "1.3.4": False,
+        "v2.3.7": False,
+        "1.3.4-alpha": False,
+        "v.4.3.2-alpha": False,
+        "v2.5.4+incompatible": False,
+        "v0.0.0-20201010233445-abcd4321dcba": True,
+        "0.0.0-20201010233445-abcd4321dcba": True,
+        "20201010233445-abcd4321dcba": False,
+        "v0.0.0-20201010233445abcd4321dcba": False,
+        "v0.0.0-20201010233445-abcd4321": False,
+        "v0.0.0-202010102345-abcd4321dcba": False,
+        "v0.0.0-20201010233445-abcd4321dcba-alpha3.4": True,
+        "v0.0.0-20201010233445-abcd4321dcba+incompatible": True,
+        "v0.0.0-abcd4321dcba-20201010233445": False
+    }
+
+    gh = GithubUtils()
+    for version, expected_value in test_data.items():
+        res = gh._is_pseudo_version(version)
+        assert res == expected_value, f"For {version} expected value: {expected_value}"
+
+
+def test_extract_timestamp():
+    """Test _extract_timestamp."""
+    test_data = {
+        "1.3.4": None,
+        "v2.3.7": None,
+        "1.3.4-alpha": None,
+        "v.4.3.2-alpha": None,
+        "v2.5.4+incompatible": None,
+        "v0.0.0-20201010233445-abcd4321dcba": "20201010233445",
+        "0.0.0-20201010233445-abcd4321dcba": "20201010233445",
+        "20201010233445-abcd4321dcba": "20201010233445",
+        "v0.0.0-20201010233445abcd4321dcba": "20201010233445",
+        "v0.0.0-20201010233445-abcd4321": "20201010233445",
+        "v0.0.0-202010102345-abcd4321dcba": None,
+        "v0.0.0-20201010233445-abcd4321dcba-alpha3.4": "20201010233445",
+        "v0.0.0-20201010233445-abcd4321dcba+incompatible": "20201010233445",
+        "v0.0.0-abcd4321dcba-20201010233445": "20201010233445",
+    }
+
+    gh = GithubUtils()
+    for version, expected_value in test_data.items():
+        res = gh._extract_timestamp(version)
+        assert res == expected_value, f"For {version} expected value: {expected_value}"
