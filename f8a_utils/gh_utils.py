@@ -259,7 +259,7 @@ class GithubUtils:
         else:
             return self.__check_for_date_rule(comm_date, date_range_rules)
 
-    def _is_pseudo_version(self, pseudo_version):
+    def is_pseudo_version(self, pseudo_version):
         """Check if given version is a pseudo version.
 
         :param version: str - Package version.
@@ -269,7 +269,7 @@ class GithubUtils:
         # Example :: v0.0.0-20200410000936-a663fba25f7a
         return len(re.findall(r'\d.\d.\d-\d{14}-[0-9a-zA-Z]{12}', pseudo_version)) == 1
 
-    def _extract_timestamp(self, pseudo_version: str):
+    def extract_timestamp(self, pseudo_version: str):
         """Extract timestamp value YYYYMMDDHHMMSS from given string."""
         # Example :: v0.0.0-20200410000936-a663fba25f7a
         timestamp = re.findall(r'\d{14}', pseudo_version)

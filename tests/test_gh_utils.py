@@ -142,7 +142,7 @@ def test_is_commit_date_in_vuln_range():
 
 
 def test_is_pseudo_version():
-    """Test _is_pseudo_version."""
+    """Test is_pseudo_version."""
     test_data = {
         "1.3.4": False,
         "v2.3.7": False,
@@ -162,12 +162,12 @@ def test_is_pseudo_version():
 
     gh = GithubUtils()
     for version, expected_value in test_data.items():
-        res = gh._is_pseudo_version(version)
+        res = gh.is_pseudo_version(version)
         assert res == expected_value, f"For {version} expected value: {expected_value}"
 
 
 def test_extract_timestamp():
-    """Test _extract_timestamp."""
+    """Test extract_timestamp."""
     test_data = {
         "1.3.4": None,
         "v2.3.7": None,
@@ -187,5 +187,5 @@ def test_extract_timestamp():
 
     gh = GithubUtils()
     for version, expected_value in test_data.items():
-        res = gh._extract_timestamp(version)
+        res = gh.extract_timestamp(version)
         assert res == expected_value, f"For {version} expected value: {expected_value}"
