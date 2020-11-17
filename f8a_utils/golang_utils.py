@@ -42,7 +42,7 @@ class GolangUtils:
 
     def __fetch_all_versions(self, obj):
         """Fetch all the versions of a pkg."""
-        tabs_exist = obj.get_value_from_list('div', 'a', {'role': 'tablist'})
+        page_exist = obj.get_sub_data('div', {'data-test-id': 'UnitHeader-breadcrumb'})
         ver_list = obj.get_value_from_list('li', 'a', {'class': 'Versions-item'})
         final_list = []
         if len(ver_list) != 0:
@@ -63,12 +63,12 @@ class GolangUtils:
                         version = ver
                     final_list.append(version)
         # The tab exist logic is added because in some cases, you wont find any versions under tab.
-        if ver_list or tabs_exist:
+        if ver_list or page_exist:
             org_name = self.get_gh_link().split("https://github.com/")[1].split("/")
             all_ver = self.gh._get_verion_list(org_name[0], org_name[1])
-            if final_list:
-                all_ver.extend(final_list)
             if all_ver:
+                if final_list:
+                    all_ver.extend(final_list)
                 return list(set(all_ver))
         return ver_list
 
@@ -88,35 +88,39 @@ class GolangUtils:
         if all_ver:
             return self.__select_latest_version(all_ver)
         else:
-            latest_ver = obj.get_value('div', {'class': 'DetailsHeader-version'})
-            if "+incompatible" in latest_ver:
-                intermediate_value = latest_ver.split('+incompatible')[0]
-                if "v" in intermediate_value:
-                    latest_ver = intermediate_value.split('v')[1]
-                else:
-                    latest_ver = intermediate_value
-            else:
-                if "v" in latest_ver:
-                    latest_ver = latest_ver.split('v')[1]
-            return latest_ver
+            return ""
 
     def __fetch_license(self, obj):
         """Fetch the github link of a pkg."""
-        sub_obj = obj.get_sub_data('span', {'data-test-id': 'DetailsHeader-infoLabelLicense'})
+        sub_obj = obj.get_sub_data('span', {'data-test-id': 'UnitHeader-licenses'})
         lic_list = obj.get_value_from_list('a', None, None, None, None, sub_obj)
-        return lic_list
+        final_lic_list = []
+        for lic in lic_list or []:
+            if ', ' in lic:
+                lics = lic.split(', ')
+                final_lic_list.extend(lics)
+            elif ',' in lic:
+                lics = lic.split(', ')
+                final_lic_list.extend(lics)
+            else:
+                final_lic_list.append(lic)
+        return final_lic_list
 
     def __fetch_gh_link(self, obj):
         """Fetch the github link of a pkg."""
         return obj.get_value(
             'a', None, 'href',
-            obj.get_sub_data('p', {'class': 'Overview-sourceCodeLink'}))
+            obj.get_sub_data('div', {'class': 'UnitMeta'}))
 
     def __fetch_module(self, obj, mod_val=None):
         """Fetch the module of a pkg."""
         module_lst = []
         if not mod_val:
-            mod_val = obj.get_value('a', {'data-test-id': 'DetailsHeader-infoLabelModule'})
+            # mod_val = obj.get_value('a', {'data-test-id': 'DetailsHeader-infoLabelModule'})
+            sub_obj = obj.get_sub_data('div', {'data-test-id': 'UnitHeader-breadcrumb'})
+            mod_list = obj.get_value_from_list('a', None, None, None, None, sub_obj)
+            if len(mod_list) >= 2:
+                mod_val = mod_list[1]
         if mod_val:
             module_lst.append(mod_val)
             if "github" not in mod_val:
