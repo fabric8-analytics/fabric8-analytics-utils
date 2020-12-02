@@ -119,6 +119,9 @@ class GolangUtils:
             # mod_val = obj.get_value('a', {'data-test-id': 'DetailsHeader-infoLabelModule'})
             sub_obj = obj.get_sub_data('div', {'data-test-id': 'UnitHeader-breadcrumb'})
             mod_list = obj.get_value_from_list('a', None, None, None, None, sub_obj)
+            if len(mod_list) == 1 and mod_list[0] == 'Discover Packages':
+                mod_val = obj.get_value('span', {'data-test-id': 'UnitHeader-breadcrumbCurrent'})
+                self.mode = "mod"
             if len(mod_list) >= 2:
                 mod_val = mod_list[1]
         if mod_val:
@@ -134,25 +137,25 @@ class GolangUtils:
         _logger.info("Populating the data object for {}".format(pkg))
         pkg_url = "https://pkg.go.dev/{}".format(pkg)
         mod_url = "https://pkg.go.dev/mod/{}".format(pkg)
-        scraper = Scraper(mod_url + "?tab=versions")
-        self.mode = "mod"
-        self.url = mod_url
+        scraper = Scraper(pkg_url + "?tab=versions")
+        self.mode = "pkg"
+        self.url = pkg_url
         self.version_list = self.__fetch_all_versions(scraper)
         if len(self.version_list) == 0:
-            _logger.info("Fetching the details from pkg.")
-            scraper = Scraper(pkg_url + "?tab=versions")
-            self.mode = "pkg"
-            self.url = pkg_url
+            _logger.info("Fetching the details from mod.")
+            scraper = Scraper(mod_url + "?tab=versions")
+            self.mode = "mod"
+            self.url = mod_url
             self.version_list = self.__fetch_all_versions(scraper)
             if len(self.version_list) != 0:
                 self.latest_version = self.__fetch_latest_version(scraper)
-                self.module = self.__fetch_module(scraper)
+                self.module = self.__fetch_module(scraper, pkg)
             else:
                 self.mode = "Not Found"
         else:
-            _logger.info("Fetching the details from mod.")
+            _logger.info("Fetching the details from pkg.")
             self.latest_version = self.__fetch_latest_version(scraper)
-            self.module = self.__fetch_module(scraper, pkg)
+            self.module = self.__fetch_module(scraper)
 
     def get_module(self):
         """Return module name of a pkg."""
