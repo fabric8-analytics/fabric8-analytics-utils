@@ -26,7 +26,7 @@ def test_golang_utils_with_valid_pkg():
 def test_golang_utils_with_valid_pkg2():
     """Test golang functions with a valid pkg."""
     go_obj = GolangUtils("github.com/containous/traefik/api")
-    assert go_obj.mode == "mod"
+    assert go_obj.mode == "pkg"
     assert "1.7.26" in go_obj.get_all_versions()
     assert go_obj.get_latest_version() is not None
     assert go_obj.get_license()[0] == "MIT"
