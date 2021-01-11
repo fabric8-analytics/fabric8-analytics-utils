@@ -15,8 +15,9 @@
 # Author: Yusuf Zainee <yzainee@redhat.com>
 #
 
+"""Utility file Maven versions."""
+
 from lxml import etree
-import requests
 import logging
 from urllib.request import urlopen
 from f8a_version_comparator.comparable_version import ComparableVersion

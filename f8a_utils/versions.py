@@ -2,8 +2,6 @@
 
 import requests
 import logging
-from urllib.request import urlopen
-from lxml import etree
 from f8a_version_comparator.comparable_version import ComparableVersion
 from f8a_utils.golang_utils import GolangUtils
 from f8a_utils.maven_utils import MavenUtils
