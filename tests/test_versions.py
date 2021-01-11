@@ -54,6 +54,15 @@ def test_get_versions_and_latest_for_ep():
     assert "4.0.4" in obj['versions']
     assert obj['latest_version'] is not None
 
+    obj = get_versions_and_latest_for_ep("maven", "org.jenkins-ci.plugins:mercurial", True)
+    assert obj['versions'] is not None
+    assert "2.11" in obj['versions']
+    assert obj['latest_version'] is not None
+
+    obj = get_versions_and_latest_for_ep("maven", "abba.dabba:jabba", True)
+    assert len(obj['versions']) == 0
+    assert obj['latest_version'] == ''
+
     obj = get_versions_and_latest_for_ep("golang", "github.com/grafana/grafana")
     assert obj['versions'] is not None
     assert "6.1.6" in obj['versions']
