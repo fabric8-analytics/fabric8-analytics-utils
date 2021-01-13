@@ -41,12 +41,16 @@ class MavenUtils:
         """Get all versions via web scraping from mvnrepository."""
         all_ver = []
         pkg = package_name.replace(":", "/")
-        url1 = "https://mvnrepository.com/artifact/{}?repo=springio-plugins-release".format(pkg)
-        url2 = "https://mvnrepository.com/artifact/{}?repo=jenkins-releases".format(pkg)
-        url3 = "https://mvnrepository.com/artifact/{}?repo=jenkins-incrementals".format(pkg)
-        all_ver = self.__fetch_data(url1, all_ver)
-        all_ver = self.__fetch_data(url2, all_ver)
-        all_ver = self.__fetch_data(url3, all_ver)
+        pkg_url = "https://mvnrepository.com/artifact/{}".format(pkg)
+        scraper = Scraper(pkg_url)
+        sub_obj = scraper.get_sub_data('div', {'id': 'snippets'})
+        tab_list = scraper.get_value_from_list('li', 'a', None, None, 'href', sub_obj)
+        for tab in tab_list:
+            repo_val = ""
+            if "?repo=" in tab:
+                repo_val = tab.split("?repo=")[1]
+            ver_url = pkg_url + "?repo={}".format(repo_val)
+            all_ver = self.__fetch_data(ver_url, all_ver)
         all_ver = set(all_ver)
         return all_ver
 
