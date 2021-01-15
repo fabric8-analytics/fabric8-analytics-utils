@@ -32,9 +32,12 @@ class MavenUtils:
     def __fetch_data(self, url, all_ver):
         """Fetch the data via web scraping."""
         scraper = Scraper(url)
-        versions = scraper.get_value_from_list('a', None, {'class': 'vbtn release'})
+        versions = scraper.get_value_from_list('a', None, {'class': 'vbtn release'}, None, 'href')
         if versions:
-            all_ver.extend(versions)
+            for ver in versions:
+                if '/' in ver:
+                    ver = ver.split('/')[1]
+                    all_ver.append(ver)
         return all_ver
 
     def get_versions_from_other_source(self, package_name):
@@ -45,6 +48,9 @@ class MavenUtils:
         scraper = Scraper(pkg_url)
         sub_obj = scraper.get_sub_data('div', {'id': 'snippets'})
         tab_list = scraper.get_value_from_list('li', 'a', None, None, 'href', sub_obj)
+        _logger.info('Collecting data for {p} from {n} data tabs'.format(
+            p=package_name, n=len(tab_list)
+        ))
         for tab in tab_list:
             repo_val = ""
             if "?repo=" in tab:
@@ -89,6 +95,7 @@ class MavenUtils:
                     pass
 
             if not ok and multi_source:
+                _logger.info('No value found in maven org. Searching in maven repo')
                 try:
                     versions = self.get_versions_from_other_source(package_name)
                     ok = True
