@@ -64,12 +64,18 @@ class GolangUtils:
                     final_list.append(version)
         # The tab exist logic is added because in some cases, you wont find any versions under tab.
         if ver_list or page_exist:
-            org_name = self.get_gh_link().split("https://github.com/")[1].split("/")
-            all_ver = self.gh._get_verion_list(org_name[0], org_name[1])
-            if all_ver:
-                if final_list:
-                    all_ver.extend(final_list)
-                return list(set(all_ver))
+            link = self.get_gh_link()
+            if link and "https://github.com/" in link:
+                org_name = self.get_gh_link().split("https://github.com/")[1].split("/")
+                all_ver = self.gh._get_verion_list(org_name[0], org_name[1])
+                if all_ver:
+                    if final_list:
+                        all_ver.extend(final_list)
+                    return list(set(all_ver))
+                elif len(final_list) == 0:
+                    return ['none']
+            else:
+                return []
         return ver_list
 
     def __select_latest_version(self, versions=[]):

@@ -56,3 +56,7 @@ def test_golang_utils_with_invalid_pkg():
     assert not go_obj.get_latest_version()
     assert not go_obj.get_gh_link()
     assert not go_obj.get_license()
+
+    go_obj = GolangUtils("blitiri.com.ar/go/chasquid/internal/smtp")
+    assert go_obj.mode == "Not Found"
+    assert not go_obj.get_all_versions()
