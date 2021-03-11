@@ -43,7 +43,8 @@ class GolangUtils:
     def __fetch_all_versions(self, obj):
         """Fetch all the versions of a pkg."""
         page_exist = obj.get_sub_data('div', {'data-test-id': 'UnitHeader-breadcrumb'})
-        ver_list = obj.get_value_from_list('li', 'a', {'class': 'Versions-item'})
+        ver_obj = obj.get_sub_data('div', {'class': 'Versions'})
+        ver_list = obj.get_value_from_list('a', None, None, None, None, ver_obj)
         final_list = []
         if len(ver_list) != 0:
             for ver in ver_list:

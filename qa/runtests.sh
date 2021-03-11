@@ -7,7 +7,7 @@ pushd "${SCRIPT_DIR}/.." > /dev/null
 set -e
 set -x
 
-COVERAGE_THRESHOLD=95
+COVERAGE_THRESHOLD=90
 
 export TERM=xterm
 

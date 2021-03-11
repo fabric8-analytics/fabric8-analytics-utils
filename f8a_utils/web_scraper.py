@@ -82,10 +82,11 @@ This code is kept commented with purpose: If anyone wants to try out scraper.
 Its easier to follow these examples
 if __name__ == '__main__':
 
-    url = "https://pkg.go.dev/github.com/kubernetes/kubernetes/pkg/volume/scaleio?tab=versions"
+    url = "https://pkg.go.dev/github.com/ryanuber/columnize?tab=versions"
     scraper = Scraper(url)
     print("--all--")
-    print(scraper.get_value_from_list('li', 'a', {'class': 'Versions-item'}))
+    x = scraper.get_sub_data('div', {'class': 'Versions'})
+    print(scraper.get_value_from_list('a', None, None, None, None, x))
     print("--latest--")
     print(scraper.get_value('div', {'class': 'DetailsHeader-version'}))
 
