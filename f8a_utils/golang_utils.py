@@ -89,10 +89,10 @@ class GolangUtils:
         version_arr.sort()
         return str(version_arr[-1])
 
-    def __fetch_latest_version(self, obj):
+    def __fetch_latest_version(self):
         """Fetch the latest version of a pkg."""
         all_ver = self.get_all_versions()
-        if all_ver:
+        if all_ver and len(all_ver) != 0 and all_ver[0] != "none":
             return self.__select_latest_version(all_ver)
         else:
             return ""
@@ -155,13 +155,13 @@ class GolangUtils:
             self.url = mod_url
             self.version_list = self.__fetch_all_versions(scraper)
             if len(self.version_list) != 0:
-                self.latest_version = self.__fetch_latest_version(scraper)
+                self.latest_version = self.__fetch_latest_version()
                 self.module = self.__fetch_module(scraper, pkg)
             else:
                 self.mode = "Not Found"
         else:
             _logger.info("Fetching the details from pkg.")
-            self.latest_version = self.__fetch_latest_version(scraper)
+            self.latest_version = self.__fetch_latest_version()
             self.module = self.__fetch_module(scraper)
 
     def get_module(self):

@@ -68,6 +68,11 @@ def test_get_versions_and_latest_for_ep():
     assert "6.1.6" in obj['versions']
     assert obj['latest_version'] is not None
 
+    obj = get_versions_and_latest_for_ep("golang", "github.com/Knetic/govaluate")
+    assert obj['versions'] is not None
+    assert "1.5.0" in obj['versions']
+    assert obj['latest_version'] is not None
+
     with pytest.raises(ValueError):
         get_versions_and_latest_for_ep("maven", None)
 
