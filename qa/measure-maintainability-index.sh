@@ -21,13 +21,15 @@ function prepare_venv() {
 
 [ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
-radon mi -s -i venv .
+radon mi -e "tests/*,node_modules/*,build/*,tools/*" -s -i venv .
 
 popd
-defects="$(radon mi -s -n B -i venv . | wc -l)"
-if [[ $defects -gt 0 ]]; then
-    echo "File(s) with too low maintainability index detected!"
-    exit 1
-else
-    echo "Finished Successfully..!"
+if [[ "$1" == "--fail-on-error" ]]
+then
+    defects="$(radon mi -e "tests/*,node_modules/*,build/*,tools/*" -s -n B -i venv . | wc -l)"
+    if [[ $defects -gt 0 ]]
+    then
+        echo "File(s) with too low maintainability index detected!"
+        exit 1
+    fi
 fi
