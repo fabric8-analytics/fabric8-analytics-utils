@@ -12,6 +12,11 @@ _INGESTION_API_URL = "http://{host}:{port}/{endpoint}".format(
     host=os.environ.get("INGESTION_SERVICE_HOST", "bayesian-jobs"),
     port=os.environ.get("INGESTION_SERVICE_PORT", "34000"),
     endpoint='internal/ingestions/epv')
+
+_WORKERFLOW_API_URL = "http://{host}:{port}/{endpoint}".format(
+    host=os.environ.get("INGESTION_SERVICE_HOST", "bayesian-jobs"),
+    port=os.environ.get("INGESTION_SERVICE_PORT", "34000"),
+    endpoint='internal/ingestions/trigger-workerflow')
 _session = FuturesSession()
 Package = namedtuple("Package", ["package", "version"])
 
@@ -49,3 +54,17 @@ def unknown_package_flow(ecosystem: str, unknown_pkgs: Set[namedtuple]):
             raise Exception('Ingestion failed') from e
         else:
             logger.info('Ingestion call being executed')
+
+
+def trigger_workerflow(payload):
+    """Triggering workerflow utility function."""
+    logger.debug("Triggered workerflow")
+
+    try:
+        _session.post(url=_WORKERFLOW_API_URL, json=payload)
+    except Exception as e:
+        logger.error('Failed to trigger unknown flow for payload %s with error %s',
+                     payload, e)
+        raise Exception('Ingestion failed') from e
+    else:
+        logger.info('Ingestion call being executed')
