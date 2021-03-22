@@ -63,8 +63,8 @@ def trigger_workerflow(payload):
     try:
         _session.post(url=_WORKERFLOW_API_URL, json=payload)
     except Exception as e:
-        logger.error('Failed to trigger unknown flow for payload %s with error %s',
+        logger.error('Failed to trigger worker flow for payload %s with error %s',
                      payload, e)
-        raise Exception('Ingestion failed') from e
+        raise Exception('Workerflow failed') from e
     else:
-        logger.info('Ingestion call being executed')
+        logger.info('Workerflow being executed')
