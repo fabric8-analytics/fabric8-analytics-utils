@@ -37,7 +37,7 @@ jobs:
       run: |
         pip install -U pip
         pip install -r tests/requirements.txt
-        PYTHONPATH=`pwd` python "$(which pytest)" --cov=f8a_utils/ --cov-report=xml --cov-fail-under=95 -vv tests/
+        PYTHONPATH=`pwd` python "$(which pytest)" --cov=f8a_utils/ --cov-report=xml --cov-fail-under=90 -vv tests/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
