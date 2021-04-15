@@ -54,9 +54,9 @@ def test_get_versions_and_latest_for_ep():
     assert "4.0.4" in obj['versions']
     assert obj['latest_version'] is not None
 
-    obj = get_versions_and_latest_for_ep("maven", "org.jenkins-ci.plugins:mercurial", True)
+    obj = get_versions_and_latest_for_ep("maven", "io.vertx:vertx-web", True)
     assert obj['versions'] is not None
-    assert "2.11" in obj['versions']
+    assert "3.0.0" in obj['versions']
     assert obj['latest_version'] is not None
 
     obj = get_versions_and_latest_for_ep("maven", "abba.dabba:jabba", True)

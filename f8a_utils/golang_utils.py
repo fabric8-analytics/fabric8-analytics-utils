@@ -117,7 +117,7 @@ class GolangUtils:
         """Fetch the github link of a pkg."""
         return obj.get_value(
             'a', None, 'href',
-            obj.get_sub_data('div', {'class': 'UnitMeta'}))
+            obj.get_sub_data('div', {'class': 'UnitMeta-repo'}))
 
     def __fetch_module(self, obj, mod_val=None):
         """Fetch the module of a pkg."""
@@ -148,12 +148,15 @@ class GolangUtils:
         self.mode = "pkg"
         self.url = pkg_url
         self.version_list = self.__fetch_all_versions(scraper)
+        print(self.version_list)
         if len(self.version_list) == 0:
             _logger.info("Fetching the details from mod.")
+            print("from mod")
             scraper = Scraper(mod_url + "?tab=versions")
             self.mode = "mod"
             self.url = mod_url
             self.version_list = self.__fetch_all_versions(scraper)
+            print(self.version_list)
             if len(self.version_list) != 0:
                 self.latest_version = self.__fetch_latest_version()
                 self.module = self.__fetch_module(scraper, pkg)
