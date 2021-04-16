@@ -148,15 +148,12 @@ class GolangUtils:
         self.mode = "pkg"
         self.url = pkg_url
         self.version_list = self.__fetch_all_versions(scraper)
-        print(self.version_list)
         if len(self.version_list) == 0:
             _logger.info("Fetching the details from mod.")
-            print("from mod")
             scraper = Scraper(mod_url + "?tab=versions")
             self.mode = "mod"
             self.url = mod_url
             self.version_list = self.__fetch_all_versions(scraper)
-            print(self.version_list)
             if len(self.version_list) != 0:
                 self.latest_version = self.__fetch_latest_version()
                 self.module = self.__fetch_module(scraper, pkg)
