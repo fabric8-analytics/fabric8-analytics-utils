@@ -46,7 +46,7 @@ class GolangUtils:
         ver_obj = obj.get_sub_data('div', {'class': 'Versions'})
         ver_list = obj.get_value_from_list('a', None, None, None, None, ver_obj)
         final_list = []
-        if len(ver_list) != 0:
+        """if len(ver_list) != 0:
             for ver in ver_list:
                 if ver.startswith('v0.0.0-'):
                     continue
@@ -62,7 +62,7 @@ class GolangUtils:
                         version = ver.split('v')[1]
                     else:
                         version = ver
-                    final_list.append(version)
+                    final_list.append(version)"""
         # The tab exist logic is added because in some cases, you wont find any versions under tab.
         if ver_list or page_exist:
             link = self.get_gh_link()
@@ -103,14 +103,16 @@ class GolangUtils:
         lic_list = obj.get_value_from_list('a', None, None, None, None, sub_obj)
         final_lic_list = []
         for lic in lic_list or []:
-            if ', ' in lic:
-                lics = lic.split(', ')
-                final_lic_list.extend(lics)
-            elif ',' in lic:
-                lics = lic.split(', ')
-                final_lic_list.extend(lics)
-            else:
-                final_lic_list.append(lic)
+            lic = lic.strip()
+            if lic:
+                if ', ' in lic:
+                    lics = lic.split(', ')
+                    final_lic_list.extend(lics)
+                elif ',' in lic:
+                    lics = lic.split(',')
+                    final_lic_list.extend(lics)
+                else:
+                    final_lic_list.append(lic)
         return final_lic_list
 
     def __fetch_gh_link(self, obj):
@@ -124,7 +126,7 @@ class GolangUtils:
         module_lst = []
         if not mod_val:
             # mod_val = obj.get_value('a', {'data-test-id': 'DetailsHeader-infoLabelModule'})
-            sub_obj = obj.get_sub_data('div', {'data-test-id': 'UnitHeader-breadcrumb'})
+            sub_obj = obj.get_sub_data('nav', {'data-test-id': 'UnitHeader-breadcrumb'})
             mod_list = obj.get_value_from_list('a', None, None, None, None, sub_obj)
             if len(mod_list) == 1 and mod_list[0] == 'Discover Packages':
                 mod_val = obj.get_value('span', {'data-test-id': 'UnitHeader-breadcrumbCurrent'})
@@ -132,7 +134,9 @@ class GolangUtils:
             if len(mod_list) >= 2:
                 mod_val = mod_list[1]
         if mod_val:
-            module_lst.append(mod_val)
+            mod_val = mod_val.strip()
+            if mod_val:
+                module_lst.append(mod_val)
             if "github" not in mod_val:
                 gh_link = self.get_gh_link()
                 if "https" in gh_link:
