@@ -4,20 +4,41 @@
 #
 #    pip-compile
 #
-beautifulsoup4==4.9.3     # via bs4
-bs4==0.0.1                # via -r requirements.in
-certifi==2020.12.5        # via requests
-cffi==1.14.4              # via cryptography
-chardet==3.0.4            # via requests
-cryptography==3.3.1       # via -r requirements.in
-git+https://github.com/fabric8-analytics/fabric8-analytics-version-comparator.git@8a57ac7#egg=f8a_version_comparator  # via -r requirements.in
-idna==2.10                # via requests
-lxml==4.6.2               # via -r requirements.in
-pycparser==2.20           # via cffi
-requests-futures==1.0.0   # via -r requirements.in
-requests==2.25.0          # via -r requirements.in, requests-futures
-semver==2.13.0            # via -r requirements.in
-six==1.15.0               # via cryptography, tenacity
-soupsieve==2.1            # via beautifulsoup4
-tenacity==6.2.0           # via -r requirements.in
-urllib3==1.26.2           # via requests
+beautifulsoup4==4.9.3
+    # via bs4
+bs4==0.0.1
+    # via -r requirements.in
+certifi==2020.12.5
+    # via requests
+cffi==1.14.4
+    # via cryptography
+chardet==3.0.4
+    # via requests
+cryptography==3.3.1
+    # via -r requirements.in
+f8a-version-comparator @ git+https://github.com/fabric8-analytics/fabric8-analytics-version-comparator.git@8a57ac7
+    # via -r requirements.in
+idna==2.10
+    # via requests
+lxml==4.6.5
+    # via -r requirements.in
+pycparser==2.20
+    # via cffi
+requests==2.25.0
+    # via
+    #   -r requirements.in
+    #   requests-futures
+requests-futures==1.0.0
+    # via -r requirements.in
+semver==2.13.0
+    # via -r requirements.in
+six==1.15.0
+    # via
+    #   cryptography
+    #   tenacity
+soupsieve==2.1
+    # via beautifulsoup4
+tenacity==6.2.0
+    # via -r requirements.in
+urllib3==1.26.2
+    # via requests
