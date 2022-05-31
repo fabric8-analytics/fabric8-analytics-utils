@@ -4,34 +4,70 @@
 #
 #    pip-compile
 #
-attrs==20.3.0             # via pytest
-beautifulsoup4==4.9.3     # via bs4
-bs4==0.0.1                # via -r ../requirements.in
-certifi==2020.12.5        # via requests
-cffi==1.14.4              # via cryptography
-chardet==4.0.0            # via requests
-codecov==2.1.11           # via -r requirements.in
-coverage==5.3.1           # via codecov, pytest-cov
-cryptography==3.3.1       # via -r ../requirements.in
-git+https://github.com/fabric8-analytics/fabric8-analytics-version-comparator.git@8a57ac7#egg=f8a_version_comparator  # via -r ../requirements.in
-idna==2.10                # via requests
-importlib-metadata==3.3.0  # via pluggy, pytest
-iniconfig==1.1.1          # via pytest
-lxml==4.6.2               # via -r ../requirements.in
-packaging==20.8           # via pytest
-pluggy==0.13.1            # via pytest
-py==1.10.0                # via pytest
-pycparser==2.20           # via cffi
-pyparsing==2.4.7          # via packaging
-pytest-cov==2.10.1        # via -r requirements.in
-pytest==6.2.1             # via -r requirements.in, pytest-cov
-requests-futures==1.0.0   # via -r ../requirements.in
-requests==2.25.1          # via -r ../requirements.in, codecov, requests-futures
-semver==2.13.0            # via -r ../requirements.in, -r requirements.in
-six==1.15.0               # via cryptography, tenacity
-soupsieve==2.1            # via beautifulsoup4
-tenacity==6.3.1           # via -r ../requirements.in
-toml==0.10.2              # via pytest
-typing-extensions==3.7.4.3  # via importlib-metadata
-urllib3==1.26.2           # via requests
-zipp==3.4.0               # via importlib-metadata
+attrs==20.3.0
+    # via pytest
+beautifulsoup4==4.9.3
+    # via bs4
+bs4==0.0.1
+    # via -r tests/../requirements.in
+certifi==2020.12.5
+    # via requests
+cffi==1.14.4
+    # via cryptography
+chardet==4.0.0
+    # via requests
+codecov==2.1.11
+    # via -r tests/requirements.in
+coverage==5.3.1
+    # via
+    #   codecov
+    #   pytest-cov
+cryptography==3.3.1
+    # via -r tests/../requirements.in
+git+https://github.com/fabric8-analytics/fabric8-analytics-version-comparator.git@8a57ac7#egg=f8a_version_comparator
+    # via -r tests/../requirements.in
+idna==2.10
+    # via requests
+iniconfig==1.1.1
+    # via pytest
+lxml==4.6.2
+    # via -r tests/../requirements.in
+packaging==20.8
+    # via pytest
+pluggy==0.13.1
+    # via pytest
+py==1.10.0
+    # via pytest
+pycparser==2.20
+    # via cffi
+pyparsing==2.4.7
+    # via packaging
+pytest-cov==2.10.1
+    # via -r tests/requirements.in
+pytest==6.2.1
+    # via
+    #   -r tests/requirements.in
+    #   pytest-cov
+requests-futures==1.0.0
+    # via -r tests/../requirements.in
+requests==2.25.1
+    # via
+    #   -r tests/../requirements.in
+    #   codecov
+    #   requests-futures
+semver==2.13.0
+    # via
+    #   -r tests/../requirements.in
+    #   -r tests/requirements.in
+six==1.15.0
+    # via
+    #   cryptography
+    #   tenacity
+soupsieve==2.1
+    # via beautifulsoup4
+tenacity==6.3.1
+    # via -r tests/../requirements.in
+toml==0.10.2
+    # via pytest
+urllib3==1.26.5
+    # via requests
